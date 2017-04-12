@@ -1,0 +1,10 @@
+avr. 12, 2017 11:00:24 AM fr.uha.graphics.shapes.SCollection add
+INFOS: Adding to collection : SRectangle [x=10 y=10 height=30 width=20]
+avr. 12, 2017 11:00:24 AM fr.uha.graphics.shapes.ui.ShapesView <init>
+INFOS: ShapesView(fr.uha.graphics.shapes.SCollection@74a10858)
+avr. 12, 2017 11:00:25 AM fr.uha.graphics.shapes.ui.ShapesView paintComponent
+INFOS: Calling paintComponant()
+avr. 12, 2017 11:00:25 AM fr.uha.graphics.shapes.ui.ShapesView paintComponent
+INFOS: Drawing componant : sun.java2d.SunGraphics2D[font=javax.swing.plaf.FontUIResource[family=Dialog,name=Dialog,style=plain,size=12],color=sun.swing.PrintColorUIResource[r=51,g=51,b=51]]
+avr. 12, 2017 11:00:25 AM fr.uha.graphics.shapes.ui.ShapeDraftman visitRectangle
+INFOS: Calling visitRectangle
