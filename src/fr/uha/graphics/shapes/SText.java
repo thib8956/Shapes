@@ -39,14 +39,6 @@ public class SText extends Shape {
     public void translate(int dx, int dy) {
 	this.loc.translate(dx, dy);
     }
-
-  /*  @Override
-    public Rectangle getBounds() {
-	FontAttributes attrs = (FontAttributes)this.getAttributes(FontAttributes.ID);
-	// FIXME: There's got to be a better way to get the SText's bounds
-	Rectangle2D bounds2d = attrs.font.getStringBounds(this.text, new FontRenderContext(new AffineTransform(), true, true));
-	return bounds2d.getBounds();
-    }*/
     
     @Override
     public Rectangle getBounds(){
