@@ -11,9 +11,12 @@ import java.util.logging.SimpleFormatter;
 
 import javax.swing.JFrame;
 
+import fr.uha.graphics.shapes.SCircle;
 import fr.uha.graphics.shapes.SCollection;
 import fr.uha.graphics.shapes.SRectangle;
+import fr.uha.graphics.shapes.SText;
 import fr.uha.graphics.shapes.attributes.ColorAttributes;
+import fr.uha.graphics.shapes.attributes.FontAttributes;
 import fr.uha.graphics.shapes.attributes.SelectionAttributes;
 
 public class Editor extends JFrame
@@ -70,18 +73,18 @@ public class Editor extends JFrame
 	r.addAttributes(new ColorAttributes(true, false,Color.BLUE,Color.BLUE));
 	r.addAttributes(new SelectionAttributes());
 	this.model.add(r);
-	/*
+	
 	SCircle c = new SCircle(new Point(100,100),10);
-	c.addAttributes(new ColorAttributes(false,true,Color.BLUE,Color.BLUE));
+	c.addAttributes(new ColorAttributes(false,true,Color.RED,Color.RED));
 	c.addAttributes(new SelectionAttributes());
 	this.model.add(c);
-
+/*
 	SText t= new SText(new Point(100,100),"hello");
 	t.addAttributes(new ColorAttributes(true,true,Color.YELLOW,Color.BLUE));
 	t.addAttributes(new FontAttributes());
 	t.addAttributes(new SelectionAttributes());
 	this.model.add(t);
-
+/*
 	SCollection sc = new SCollection();
 	sc.addAttributes(new SelectionAttributes());
 	r= new SRectangle(new Point(20,30),30,30);
@@ -104,5 +107,7 @@ public class Editor extends JFrame
 	Editor self = new Editor();
 	self.pack();
 	self.setVisible(true);
+	
+
     }
 }

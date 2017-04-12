@@ -38,24 +38,41 @@ public class ShapeDraftman implements ShapeVisitor {
 	    this.graph.setColor(attrs.filledColor);
 	    this.graph.fillRect(r.x, r.y, r.width, r.height);
 	}
-	this.graph.drawRect(r.x, r.y, r.width, r.height);
+
 	if (attrs.stroked){
 	    this.graph.setColor(attrs.strokedColor);
 	    
 	} else {
 	    this.graph.setColor(Color.BLACK);
 	}
+	this.graph.drawRect(r.x, r.y, r.width, r.height);
     }
 
     @Override
     public void visitCircle(SCircle circle) {
-	// TODO Auto-generated method stub
+    	LOGGER.log(Level.INFO, "Calling visitCircle");
 
+    	ColorAttributes attrs = (ColorAttributes)circle.getAttributes(ColorAttributes.ID);
+    	if (attrs == null) attrs = DEFAULTCOLORATTRIBUTES;
+    	if (attrs.filled){
+    	    this.graph.setColor(attrs.filledColor);
+    	    this.graph.fillOval(circle.getLoc().x, circle.getLoc().y, circle.getRadius(), circle.getRadius());
+    	}
+
+    	if (attrs.stroked){
+    	    this.graph.setColor(attrs.strokedColor);
+    	    
+    	} else {
+    	    this.graph.setColor(Color.BLACK);
+    	}
+    	this.graph.drawOval(circle.getLoc().x, circle.getLoc().y, circle.getRadius(), circle.getRadius());
     }
 
     @Override
     public void visitText(SText text) {
-	// TODO Auto-generated method stub
+    	LOGGER.log(Level.INFO, "Calling visitCircle");
+    	
+    	
 
     }
 

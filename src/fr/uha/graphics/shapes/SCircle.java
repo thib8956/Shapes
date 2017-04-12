@@ -4,6 +4,7 @@ import java.awt.Point;
 import java.awt.Rectangle;
 
 public class SCircle extends Shape {
+	
     private static final int DEFAULT_RADIUS = 1;
     private int radius;
     private Point loc;
@@ -17,7 +18,7 @@ public class SCircle extends Shape {
 	this.loc = loc;
 	this.radius = radius;
     }
-
+    
     @Override
     public Point getLoc() {
 	return this.loc;
@@ -31,6 +32,10 @@ public class SCircle extends Shape {
     @Override
     public void translate(int dx, int dy) {
 	this.loc.translate(dx, dy);
+    }
+    
+    public int getRadius() {
+	return this.radius;
     }
 
     @Override
