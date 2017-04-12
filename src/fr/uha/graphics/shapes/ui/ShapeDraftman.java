@@ -33,14 +33,15 @@ public class ShapeDraftman implements ShapeVisitor {
 	LOGGER.log(Level.INFO, "Calling visitRectangle");
 	Rectangle r = rect.getRect();
 	ColorAttributes attrs = (ColorAttributes)rect.getAttributes(ColorAttributes.ID);
+	LOGGER.log(Level.INFO, "ColorAttributes : \n{0}", attrs);
 	if (attrs == null) attrs = DEFAULTCOLORATTRIBUTES;
-	if (attrs.filled){
+	else if (attrs.filled){
 	    this.graph.setColor(attrs.filledColor);
 	    this.graph.fillRect(r.x, r.y, r.width, r.height);
 	}
-	this.graph.drawRect(r.x, r.y, r.width, r.height);
 	if (attrs.stroked){
 	    this.graph.setColor(attrs.strokedColor);
+	    this.graph.drawRect(r.x, r.y, r.width, r.height);
 	    
 	} else {
 	    this.graph.setColor(Color.BLACK);

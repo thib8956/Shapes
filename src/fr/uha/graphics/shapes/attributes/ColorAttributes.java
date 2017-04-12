@@ -6,23 +6,35 @@ public class ColorAttributes extends Attributes {
     
     public static final String ID = "colors";
     
-    public boolean filled = false;
-    public boolean stroked = true;
-    public Color strokedColor = Color.BLACK;
-    public Color filledColor = Color.BLACK;
+    public boolean filled;
+    public boolean stroked;
+    public Color strokedColor;
+    public Color filledColor;
     
-    public ColorAttributes(boolean filled, boolean stroked, Color strokedColor, Color filledColor) {
+    public ColorAttributes(boolean filled, boolean stroked, Color filledColor, Color strokedColor) {
 	this.filled = filled;
 	this.stroked = stroked;
 	this.strokedColor = strokedColor;
-	this.filled = filled;
+	this.filledColor = filledColor;
     }
 
     public ColorAttributes() {
+	// Constructor for color attributes with default values
+	this.filled = false;
+	this.stroked = true;
+	this.strokedColor = Color.BLACK;
+	this.filledColor = Color.BLACK;
     }
 
     @Override
     public String getId() {
 	return ID;
     }
+
+    @Override
+    public String toString() {
+	return "ColorAttributes [filled=" + filled + ", stroked=" + stroked + ", strokedColor=" + strokedColor
+		+ ", filledColor=" + filledColor + "]";
+    }
+    
 }
