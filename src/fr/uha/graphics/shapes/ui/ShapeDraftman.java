@@ -39,10 +39,6 @@ public class ShapeDraftman implements ShapeVisitor {
 	    this.graph.setColor(attrs.filledColor);
 	    this.graph.fillRect(r.x, r.y, r.width, r.height);
 	}
-<<<<<<< HEAD
-
-=======
->>>>>>> 384d9e49f376925744f7060f13fab94fe6e72b0f
 	if (attrs.stroked){
 	    this.graph.setColor(attrs.strokedColor);
 	    this.graph.drawRect(r.x, r.y, r.width, r.height);
@@ -50,7 +46,6 @@ public class ShapeDraftman implements ShapeVisitor {
 	} else {
 	    this.graph.setColor(Color.BLACK);
 	}
-	this.graph.drawRect(r.x, r.y, r.width, r.height);
     }
 
     @Override
