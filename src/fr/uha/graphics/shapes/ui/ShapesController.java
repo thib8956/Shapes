@@ -39,12 +39,20 @@ public class ShapesController extends Controller{
 	public void mousePressed(MouseEvent e) {
 		// TODO Auto-generated method stub
 		super.mousePressed(e);
+//		if(s!=null){
+//			SelectionAttributes sel1 = (SelectionAttributes)s.getAttributes(SelectionAttributes.ID);
+//			if(sel1.isSelected()){
+//				s=getTarget();
+//			}
+//		}
+		
+		this.locClicked = e.getPoint();
+		s = getTarget();
 		if(s!=null){
-			SelectionAttributes sel1 = (SelectionAttributes)s.getAttributes(SelectionAttributes.ID);
-			if(sel1.isSelected()){
-				s=getTarget();
-			}
+			SelectionAttributes sel2 = (SelectionAttributes)s.getAttributes(SelectionAttributes.ID);
+			sel2.toggleSelection();
 		}
+//		if(!shiftDown()) unselectAll();	
 	}
 
 	@Override
@@ -62,7 +70,7 @@ public class ShapesController extends Controller{
 			SelectionAttributes sel2 = (SelectionAttributes)s.getAttributes(SelectionAttributes.ID);
 			sel2.toggleSelection();
 		}
-		if(!shiftDown()) unselectAll();
+	//	if(!shiftDown()) unselectAll();
 
 	}
 
@@ -87,9 +95,15 @@ public class ShapesController extends Controller{
 	@Override
 	public void mouseDragged(MouseEvent evt) {
 		// TODO Auto-generated method stub
+
 		super.mouseDragged(evt);
-		translateSelected(s.getLoc().x,s.getLoc().y);
-	}
+//		s=getTarget();
+//		LOGGER.log(Level.INFO, "Drag started, s={0}",s);
+//		if(s!=null){
+			translateSelected(evt.getPoint().x-s.getLoc().x,evt.getPoint().y-s.getLoc().y);
+		}
+		
+//	}
 
 	@Override
 	public void keyPressed(KeyEvent evt) {
@@ -119,16 +133,21 @@ public class ShapesController extends Controller{
 	}
 
 	public void translateSelected(int x, int y){
+		LOGGER.log(Level.INFO, "Translate started");
+		LOGGER.log(Level.INFO, "s={0}", s );
+		LOGGER.log(Level.INFO, "x={0}", x );
+		LOGGER.log(Level.INFO, "y={0}", y );
 		s.translate(x, y);
+		getView().repaint();
 	}
 
-	public void unselectAll(){
-		if(s!=null){
-			SelectionAttributes sel3 = (SelectionAttributes)s.getAttributes(SelectionAttributes.ID);
-			sel3.unselect();
-			s=null;
-		}
-	}
+//	public void unselectAll(){
+//		if(s!=null){
+//			SelectionAttributes sel3 = (SelectionAttributes)s.getAttributes(SelectionAttributes.ID);
+//			sel3.unselect();
+//			s=null;
+//		}
+//	}
 
 	public boolean shiftDown(){  	
 		return shift_down;
