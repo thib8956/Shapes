@@ -53,6 +53,7 @@ public class ShapesController extends Controller{
 			sel2.toggleSelection();
 		}
 //		if(!shiftDown()) unselectAll();	
+		getView().repaint();
 	}
 
 	@Override
@@ -71,25 +72,8 @@ public class ShapesController extends Controller{
 			sel2.toggleSelection();
 		}
 	//	if(!shiftDown()) unselectAll();
+		getView().repaint();
 
-	}
-
-	@Override
-	public void mouseEntered(MouseEvent e) {
-		// TODO Auto-generated method stub
-		super.mouseEntered(e);
-	}
-
-	@Override
-	public void mouseExited(MouseEvent e) {
-		// TODO Auto-generated method stub
-		super.mouseExited(e);
-	}
-
-	@Override
-	public void mouseMoved(MouseEvent evt) {
-		// TODO Auto-generated method stub
-		super.mouseMoved(evt);
 	}
 
 	@Override
@@ -100,7 +84,7 @@ public class ShapesController extends Controller{
 //		s=getTarget();
 //		LOGGER.log(Level.INFO, "Drag started, s={0}",s);
 //		if(s!=null){
-			translateSelected(evt.getPoint().x-s.getLoc().x,evt.getPoint().y-s.getLoc().y);
+		translateSelected(evt.getPoint().x-s.getLoc().x,evt.getPoint().y-s.getLoc().y);
 		}
 		
 //	}
@@ -124,6 +108,7 @@ public class ShapesController extends Controller{
 		Iterator<Shape> it = model.getIterator();
 		while (it.hasNext()){
 			Shape current = it.next();
+			LOGGER.log(Level.INFO, "[getTarget] Current bounds : {0}",current.getBounds());
 			if (current.getBounds().contains(this.locClicked)){
 				LOGGER.log(Level.INFO, "Shape selected : {0}", current);
 				return current;

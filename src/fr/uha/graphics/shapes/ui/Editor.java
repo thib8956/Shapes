@@ -78,20 +78,13 @@ public class Editor extends JFrame
 	c.addAttributes(new ColorAttributes(false,true,Color.RED,Color.RED));
 	c.addAttributes(new SelectionAttributes());
 	this.model.add(c);
-	
-//	Rectangle bounds = c.getBounds();
-//	SRectangle r = new SRectangle(new Point(bounds.x, bounds.y), bounds.width, bounds.height);
-//	r.addAttributes(new ColorAttributes(false, true, Color.BLACK, Color.BLUE));
-//	c.addAttributes(new SelectionAttributes());
-//	this.model.add(r);
 
-	SText t= new SText(new Point(100,100),"hello");
+	SText t= new SText(new Point(150,150),"hello");
 	t.addAttributes(new ColorAttributes(true,true,Color.YELLOW,Color.BLUE));
-	FontAttributes fa = new FontAttributes();
-	LOGGER.log(Level.INFO, "SText font attributes : \n{0}", fa);
-	t.addAttributes(fa);
+	t.addAttributes(new FontAttributes());
 	t.addAttributes(new SelectionAttributes());
 	this.model.add(t);
+	
 
 //	SCollection sc = new SCollection();
 //	sc.addAttributes(new SelectionAttributes());

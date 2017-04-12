@@ -1,10 +1,13 @@
 package fr.uha.graphics.shapes;
 
+import java.awt.Canvas;
+import java.awt.FontMetrics;
 import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.font.FontRenderContext;
 import java.awt.geom.AffineTransform;
 import java.awt.geom.Rectangle2D;
+import java.util.logging.Logger;
 
 import fr.uha.graphics.shapes.attributes.FontAttributes;
 
@@ -37,12 +40,23 @@ public class SText extends Shape {
 	this.loc.translate(dx, dy);
     }
 
-    @Override
+  /*  @Override
     public Rectangle getBounds() {
 	FontAttributes attrs = (FontAttributes)this.getAttributes(FontAttributes.ID);
 	// FIXME: There's got to be a better way to get the SText's bounds
 	Rectangle2D bounds2d = attrs.font.getStringBounds(this.text, new FontRenderContext(new AffineTransform(), true, true));
 	return bounds2d.getBounds();
+    }*/
+    
+    @Override
+    public Rectangle getBounds(){
+	FontAttributes attrs = (FontAttributes)this.getAttributes(FontAttributes.ID);
+	Canvas can = new Canvas();
+	FontMetrics fontMetrics = can.getFontMetrics(attrs.font);
+
+	int w = fontMetrics.stringWidth(this.text);
+	int h = attrs.font.getSize();
+	return new Rectangle(loc.x, loc.y-h, w, h);
     }
 
     @Override
