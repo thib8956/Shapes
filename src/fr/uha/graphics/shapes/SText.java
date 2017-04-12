@@ -2,14 +2,20 @@ package fr.uha.graphics.shapes;
 
 import java.awt.Point;
 import java.awt.Rectangle;
+import java.awt.font.FontRenderContext;
+import java.awt.geom.AffineTransform;
+import java.awt.geom.Rectangle2D;
+
+import fr.uha.graphics.shapes.attributes.FontAttributes;
 
 public class SText extends Shape {
     
     private String text;
     private Point loc;
     
-    public SText(Point point, String string) {
-	// TODO Auto-generated constructor stub
+    public SText(Point loc, String string) {
+	this.text = string;
+	this.loc = loc;
     }
 
     public String getText(){
@@ -33,8 +39,10 @@ public class SText extends Shape {
 
     @Override
     public Rectangle getBounds() {
-	// TODO Auto-generated method stub
-	return new Rectangle(150, 150);
+	FontAttributes attrs = (FontAttributes)this.getAttributes(FontAttributes.ID);
+	// FIXME: There's got to be a better way to get the SText's bounds
+	Rectangle2D bounds2d = attrs.font.getStringBounds(this.text, new FontRenderContext(new AffineTransform(), true, true));
+	return bounds2d.getBounds();
     }
 
     @Override
