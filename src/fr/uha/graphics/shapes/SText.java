@@ -43,6 +43,7 @@ public class SText extends Shape {
 	// FIXME: There's got to be a better way to get the SText's bounds
 	Rectangle2D bounds2d = attrs.font.getStringBounds(this.text, new FontRenderContext(new AffineTransform(), true, true));
 	return bounds2d.getBounds();
+
     }
 
     @Override

@@ -39,25 +39,18 @@ public class ShapesController extends Controller{
 	public void mousePressed(MouseEvent e) {
 		// TODO Auto-generated method stub
 		super.mousePressed(e);
-//		if(s!=null){
-//			SelectionAttributes sel1 = (SelectionAttributes)s.getAttributes(SelectionAttributes.ID);
-//			if(sel1.isSelected()){
-//				s=getTarget();
-//			}
-//		}
-		
 		this.locClicked = e.getPoint();
 		s = getTarget();
 		if(s!=null){
-			SelectionAttributes sel2 = (SelectionAttributes)s.getAttributes(SelectionAttributes.ID);
-			sel2.toggleSelection();
-		}
-//		if(!shiftDown()) unselectAll();	
+			SelectionAttributes sel1 = (SelectionAttributes)s.getAttributes(SelectionAttributes.ID);
+			sel1.toggleSelection();
+		}				
 	}
 
 	@Override
 	public void mouseReleased(MouseEvent e) {
 		// TODO Auto-generated method stub
+		if(!shiftDown()) unselectAll();
 	}
 
 	@Override
@@ -70,8 +63,7 @@ public class ShapesController extends Controller{
 			SelectionAttributes sel2 = (SelectionAttributes)s.getAttributes(SelectionAttributes.ID);
 			sel2.toggleSelection();
 		}
-	//	if(!shiftDown()) unselectAll();
-
+			if(!shiftDown()) unselectAll();
 	}
 
 	@Override
@@ -95,28 +87,31 @@ public class ShapesController extends Controller{
 	@Override
 	public void mouseDragged(MouseEvent evt) {
 		// TODO Auto-generated method stub
-
+		//LOGGER.log(Level.INFO, "s={0}", s );
 		super.mouseDragged(evt);
-//		s=getTarget();
-//		LOGGER.log(Level.INFO, "Drag started, s={0}",s);
-//		if(s!=null){
-			translateSelected(evt.getPoint().x-s.getLoc().x,evt.getPoint().y-s.getLoc().y);
-		}
-		
-//	}
+		if(s!=null) translateSelected(evt.getPoint().x-s.getLoc().x,evt.getPoint().y-s.getLoc().y); // s define into mousePressed
+	}
+
 
 	@Override
 	public void keyPressed(KeyEvent evt) {
 		// TODO Auto-generated method stub
+		LOGGER.log(Level.INFO, "Key used" );
 		super.keyPressed(evt);
-		if((evt.getKeyCode()==KeyEvent.VK_SHIFT)) shift_down=true;
+		if((evt.getKeyCode()==KeyEvent.VK_SHIFT)){
+			shift_down=true;
+			LOGGER.log(Level.INFO, "Shift On" );
+		}
 	}
 
 	@Override
 	public void keyReleased(KeyEvent evt) {
 		// TODO Auto-generated method stub
 		super.keyReleased(evt);
-		if((evt.getKeyCode()==KeyEvent.VK_SHIFT)) shift_down=false;
+		if((evt.getKeyCode()==KeyEvent.VK_SHIFT)){
+			shift_down=false;
+			LOGGER.log(Level.INFO, "Shift Off" );
+		}
 	}
 
 	public Shape getTarget(){
@@ -141,13 +136,13 @@ public class ShapesController extends Controller{
 		getView().repaint();
 	}
 
-//	public void unselectAll(){
-//		if(s!=null){
-//			SelectionAttributes sel3 = (SelectionAttributes)s.getAttributes(SelectionAttributes.ID);
-//			sel3.unselect();
-//			s=null;
-//		}
-//	}
+	public void unselectAll(){
+		if(s!=null){
+			SelectionAttributes sel3 = (SelectionAttributes)s.getAttributes(SelectionAttributes.ID);
+			sel3.unselect();
+			s=null;
+		}
+	}
 
 	public boolean shiftDown(){  	
 		return shift_down;
