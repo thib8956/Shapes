@@ -70,8 +70,10 @@ public class Editor extends JFrame
 
 
 	SRectangle r = new SRectangle(new Point(10,10),20,30);
-	r.addAttributes(new ColorAttributes(true, false,Color.BLUE,Color.BLUE));
+	r.addAttributes(new ColorAttributes(true, true,Color.BLUE,Color.BLACK));
 	r.addAttributes(new SelectionAttributes());
+	LOGGER.log(Level.INFO, "Rectangle color attributes : \n {0}", r.getAttributes(ColorAttributes.ID));
+	LOGGER.log(Level.INFO, "Rectangle selection attributes : \n {0}", r.getAttributes(SelectionAttributes.ID));
 	this.model.add(r);
 	
 	SCircle c = new SCircle(new Point(100,100),10);

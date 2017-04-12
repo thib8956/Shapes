@@ -44,5 +44,4 @@ public class SRectangle extends Shape {
     public String toString() {
 	return "SRectangle [x=" + rect.x + " y=" + rect.y + " height=" + rect.height + " width=" + rect.width + "]";
     }
-
 }
