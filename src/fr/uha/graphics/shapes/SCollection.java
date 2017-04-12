@@ -8,8 +8,6 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import fr.uha.graphics.shapes.attributes.ColorAttributes;
-
 public class SCollection extends Shape {
     
     private static final Logger LOGGER = Logger.getLogger(SCollection.class.getName());
@@ -32,7 +30,6 @@ public class SCollection extends Shape {
 
     @Override
     public Point getLoc() {
-	// TODO Auto-generated method stub
 	return this.loc;
     }
 

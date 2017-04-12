@@ -2,7 +2,6 @@ package fr.uha.graphics.shapes;
 
 import java.awt.Point;
 import java.awt.Rectangle;
-import java.util.Iterator;
 
 public class SCircle extends Shape {
 	

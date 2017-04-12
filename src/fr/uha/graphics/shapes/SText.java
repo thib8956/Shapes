@@ -4,10 +4,6 @@ import java.awt.Canvas;
 import java.awt.FontMetrics;
 import java.awt.Point;
 import java.awt.Rectangle;
-import java.awt.font.FontRenderContext;
-import java.awt.geom.AffineTransform;
-import java.awt.geom.Rectangle2D;
-import java.util.logging.Logger;
 
 import fr.uha.graphics.shapes.attributes.FontAttributes;
 

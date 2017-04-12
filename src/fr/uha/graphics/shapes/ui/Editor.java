@@ -3,7 +3,6 @@ package fr.uha.graphics.shapes.ui;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Point;
-import java.awt.Rectangle;
 import java.io.IOException;
 import java.util.logging.FileHandler;
 import java.util.logging.Level;
@@ -24,7 +23,7 @@ public class Editor extends JFrame
 {
     private static final Logger LOGGER = Logger.getLogger(Editor.class.getName());
     private static FileHandler fh = null;
-    
+
     private static final int DEFAULT_WIN_WIDTH = 800;
     private static final int DEFAULT_WIN_HEIGHT = 600;
 
@@ -34,9 +33,10 @@ public class Editor extends JFrame
     public Editor()
     {	
 	super("Shapes Editor");
-	
+
 	this.addWindowListener(new java.awt.event.WindowAdapter()
 	{
+	    @Override
 	    public void windowClosing(java.awt.event.WindowEvent evt)
 	    {
 		System.exit(0);
@@ -48,6 +48,8 @@ public class Editor extends JFrame
 	this.sview = new ShapesView(this.model);
 	this.sview.setPreferredSize(new Dimension(DEFAULT_WIN_WIDTH, DEFAULT_WIN_HEIGHT));
 	this.getContentPane().add(this.sview, java.awt.BorderLayout.CENTER);
+
+	this.getContentPane().addKeyListener(this.sview.getController());
     }
 
     public static void initLogger(){
@@ -73,7 +75,7 @@ public class Editor extends JFrame
 	LOGGER.log(Level.INFO, "Rectangle color attributes : \n{0}", r.getAttributes(ColorAttributes.ID));
 	LOGGER.log(Level.INFO, "Rectangle selection attributes : \n{0}", r.getAttributes(SelectionAttributes.ID));
 	this.model.add(r);
-	
+
 	SCircle c = new SCircle(new Point(100,100), 30);
 	c.addAttributes(new ColorAttributes(false,true,Color.RED,Color.RED));
 	c.addAttributes(new SelectionAttributes());
@@ -84,37 +86,38 @@ public class Editor extends JFrame
 	t.addAttributes(new FontAttributes());
 	t.addAttributes(new SelectionAttributes());
 	this.model.add(t);
-	
 
-//	SCollection sc = new SCollection();
-//	sc.addAttributes(new SelectionAttributes());
-//	r= new SRectangle(new Point(20,30), 60, 60);
-//	r.addAttributes(new ColorAttributes(true,false,Color.MAGENTA,Color.BLUE));
-//	r.addAttributes(new SelectionAttributes());
-//	sc.add(r);
-//	c = new SCircle(new Point(150,100), 40);
-//	c.addAttributes(new ColorAttributes(false,true,Color.BLUE,Color.DARK_GRAY));
-//	c.addAttributes(new SelectionAttributes());
-//	sc.add(c);
-//	this.model.add(sc);
-//	
-//	Rectangle bounds = sc.getBounds();
-//	LOGGER.info(bounds.toString());
-//	SRectangle rect = new SRectangle(new Point(bounds.x, bounds.y), bounds.width, bounds.height);
-//	rect.addAttributes(new ColorAttributes(false, true, Color.BLACK, Color.BLUE));
-//	rect.addAttributes(new SelectionAttributes());
-//	this.model.add(rect);
+
+	//	SCollection sc = new SCollection();
+	//	sc.addAttributes(new SelectionAttributes());
+	//	r= new SRectangle(new Point(20,30), 60, 60);
+	//	r.addAttributes(new ColorAttributes(true,false,Color.MAGENTA,Color.BLUE));
+	//	r.addAttributes(new SelectionAttributes());
+	//	sc.add(r);
+	//	c = new SCircle(new Point(150,100), 40);
+	//	c.addAttributes(new ColorAttributes(false,true,Color.BLUE,Color.DARK_GRAY));
+	//	c.addAttributes(new SelectionAttributes());
+	//	sc.add(c);
+	//	this.model.add(sc);
+	//	
+	//	Rectangle bounds = sc.getBounds();
+	//	LOGGER.info(bounds.toString());
+	//	SRectangle rect = new SRectangle(new Point(bounds.x, bounds.y), bounds.width, bounds.height);
+	//	rect.addAttributes(new ColorAttributes(false, true, Color.BLACK, Color.BLUE));
+	//	rect.addAttributes(new SelectionAttributes());
+	//	this.model.add(rect);
 
     }
 
     public static void main(String[] args)
     {
 	Editor.initLogger();
-	
+
 	Editor self = new Editor();
 	self.pack();
 	self.setVisible(true);
-	
+	self.getContentPane().requestFocusInWindow();
+
 
     }
 }
