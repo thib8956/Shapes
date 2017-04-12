@@ -2,6 +2,7 @@ package fr.uha.graphics.shapes;
 
 import java.awt.Point;
 import java.awt.Rectangle;
+import java.util.Iterator;
 
 public class SCircle extends Shape {
 	
@@ -40,13 +41,18 @@ public class SCircle extends Shape {
 
     @Override
     public Rectangle getBounds() {
-	// TODO Auto-generated method stub
-	return null;
+	return new Rectangle(loc.x, loc.y, radius, radius);
     }
 
     @Override
     public void accept(ShapeVisitor sv) {
 	sv.visitCircle(this);
     }
+
+    @Override
+    public String toString() {
+	return "SCircle [radius=" + radius + ", loc=" + loc + "]";
+    }
+    
 
 }

@@ -51,9 +51,9 @@ public class SCollection extends Shape {
 
     @Override
     public Rectangle getBounds() {
-	Rectangle bounds = new Rectangle();
-	// cf. Rectangle.union()
-	return null;
+	Rectangle bounds = childShapes.get(0).getBounds();
+	for (Shape s: childShapes) bounds = bounds.union(s.getBounds());
+	return bounds;
     }
 
     @Override
