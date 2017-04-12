@@ -21,6 +21,10 @@ public class SelectionAttributes extends Attributes {
 	selected = !selected;
     }
     
+    public boolean isSelected(){
+    	return this.selected;
+    }
+    
     @Override
     public String getId(){
 	return ID;
