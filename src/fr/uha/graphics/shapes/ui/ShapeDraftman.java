@@ -35,12 +35,12 @@ public class ShapeDraftman implements ShapeVisitor {
     @Override
     public void visitRectangle(SRectangle rect) {
 
-	LOGGER.log(Level.INFO, "Calling visitRectangle");
+//	LOGGER.log(Level.INFO, "Calling visitRectangle");
 	Rectangle r = rect.getRect();
 	ColorAttributes attrs = (ColorAttributes)rect.getAttributes(ColorAttributes.ID);
 	SelectionAttributes selAttrs = (SelectionAttributes)rect.getAttributes(SelectionAttributes.ID);
 
-	LOGGER.log(Level.INFO, "ColorAttributes : \n{0}", attrs);
+//	LOGGER.log(Level.INFO, "ColorAttributes : \n{0}", attrs);
 	if (attrs == null) attrs = DEFAULTCOLORATTRIBUTES;
 	else if (attrs.filled){
 	    this.graph.setColor(attrs.filledColor);
@@ -77,7 +77,7 @@ public class ShapeDraftman implements ShapeVisitor {
     public void visitText(SText text) {
 	Point loc = text.getLoc();
 	Rectangle bounds = text.getBounds();
-	LOGGER.log(Level.INFO, "visitText loc={0}, bounds={1}", new Object[]{loc, bounds});
+//	LOGGER.log(Level.INFO, "visitText loc={0}, bounds={1}", new Object[]{loc, bounds});
 	// Fetch SText attributes
 	ColorAttributes colAttrs = (ColorAttributes)text.getAttributes(ColorAttributes.ID);
 	SelectionAttributes selAttrs = (SelectionAttributes)text.getAttributes(SelectionAttributes.ID);
