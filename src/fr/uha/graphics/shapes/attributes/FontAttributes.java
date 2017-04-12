@@ -14,15 +14,21 @@ public class FontAttributes extends Attributes {
 	this.font = font;
 	this.fontColor = fontColor;
     }
-    
+
     public FontAttributes() {
-	// TODO Auto-generated constructor stub
+	// Constructor with default font attributes values.
+	this.font = new Font("TimesRoman", Font.PLAIN, 18);
+	this.fontColor = Color.BLACK;
+    }
+
+    @Override
+    public String toString() {
+	return "FontAttributes [font=" + font + ", fontColor=" + fontColor + "]";
     }
 
     @Override
     public String getId() {
-	// TODO Auto-generated method stub
-	return null;
+	return ID;
     }
     
     public Rectangle getBounds(String bounds){
