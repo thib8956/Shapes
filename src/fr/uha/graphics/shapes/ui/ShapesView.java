@@ -24,7 +24,7 @@ public class ShapesView extends View {
 	// Draw the default (blank) JPanel
 	super.paintComponent(component);
 
-	LOGGER.log(Level.INFO, "Drawing component : {0}", component);
+//	LOGGER.log(Level.INFO, "Drawing component : {0}", component);
 	Shape model = (Shape)this.getModel();
 	this.draftman = new ShapeDraftman(component);
 	model.accept(draftman);

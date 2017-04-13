@@ -24,8 +24,8 @@ public class Editor extends JFrame
     private static final Logger LOGGER = Logger.getLogger(Editor.class.getName());
     private static FileHandler fh = null;
 
-    private static final int DEFAULT_WIN_WIDTH = 800;
-    private static final int DEFAULT_WIN_HEIGHT = 600;
+    private static final int DEFAULT_WIN_WIDTH = 400;
+    private static final int DEFAULT_WIN_HEIGHT = 300;
 
     ShapesView sview;
     SCollection model;
@@ -88,17 +88,17 @@ public class Editor extends JFrame
 	this.model.add(t);
 
 
-	//	SCollection sc = new SCollection();
-	//	sc.addAttributes(new SelectionAttributes());
-	//	r= new SRectangle(new Point(20,30), 60, 60);
-	//	r.addAttributes(new ColorAttributes(true,false,Color.MAGENTA,Color.BLUE));
-	//	r.addAttributes(new SelectionAttributes());
-	//	sc.add(r);
-	//	c = new SCircle(new Point(150,100), 40);
-	//	c.addAttributes(new ColorAttributes(false,true,Color.BLUE,Color.DARK_GRAY));
-	//	c.addAttributes(new SelectionAttributes());
-	//	sc.add(c);
-	//	this.model.add(sc);
+//		SCollection sc = new SCollection();
+//		sc.addAttributes(new SelectionAttributes());
+//		r= new SRectangle(new Point(20,30), 60, 60);
+//		r.addAttributes(new ColorAttributes(true,false,Color.MAGENTA,Color.BLUE));
+//		r.addAttributes(new SelectionAttributes());
+//		sc.add(r);
+//		c = new SCircle(new Point(150,100), 40);
+//		c.addAttributes(new ColorAttributes(false,true,Color.BLUE,Color.DARK_GRAY));
+//		c.addAttributes(new SelectionAttributes());
+//		sc.add(c);
+//		this.model.add(sc);
 	//	
 	//	Rectangle bounds = sc.getBounds();
 	//	LOGGER.info(bounds.toString());

@@ -20,7 +20,7 @@ public class SCollection extends Shape {
     }
     
     public void add(Shape s){
-	LOGGER.log(Level.INFO, "Adding to collection : {0}", s.toString());
+//	LOGGER.log(Level.INFO, "Adding to collection : {0}", s.toString());
 	childShapes.add(s);
     }
     

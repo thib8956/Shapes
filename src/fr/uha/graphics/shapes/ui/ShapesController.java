@@ -16,7 +16,7 @@ public class ShapesController extends Controller{
 
     private static final Logger LOGGER = Logger.getLogger(ShapesController.class.getName());
     private boolean shiftDown;
-    private Shape selected ;
+    private Shape s;
     private Point locClicked;
 
 
@@ -34,33 +34,42 @@ public class ShapesController extends Controller{
     public void mousePressed(MouseEvent e) {
 	super.mousePressed(e);
 	this.locClicked = e.getPoint();
-	selected  = getTarget();
-	if(selected !=null){
-	    SelectionAttributes sel = (SelectionAttributes)selected .getAttributes(SelectionAttributes.ID);
+	if((s=getTarget()) != null){
+	    SelectionAttributes sel = (SelectionAttributes)s .getAttributes(SelectionAttributes.ID);
 	    sel.toggleSelection();
 	}
 	getView().repaint();
-	
+	/*
 	for (Iterator<Shape> it = ((SCollection)this.getModel()).getIterator(); it.hasNext();) {
-	    Shape s = it.next();
-	    SelectionAttributes sattrs = (SelectionAttributes)s.getAttributes(SelectionAttributes.ID);
-	    LOGGER.log(Level.INFO, "Shape {0} isSelected : {1}", new Object[]{s, sattrs.isSelected()});
+	    Shape current = it.next();
+	    SelectionAttributes sattrs = (SelectionAttributes)current.getAttributes(SelectionAttributes.ID);
+	    LOGGER.log(Level.INFO, "Shape {0} isSelected : {1}", new Object[]{current, sattrs.isSelected()});
+
 	}
+	*/	
     }
 
     @Override
     public void mouseReleased(MouseEvent e) {
-	if(!shiftDown()) unselectAll();
+//	if(!shiftDown()) unselectAll();
+	for (Iterator<Shape> it = ((SCollection)this.getModel()).getIterator(); it.hasNext();) {
+	    Shape current = it.next();
+	    SelectionAttributes sattrs = (SelectionAttributes)current.getAttributes(SelectionAttributes.ID);
+	    LOGGER.log(Level.INFO, "Shape {0} isSelected : {1}", new Object[]{current, sattrs.isSelected()});
+
+	}
     }
 
     @Override
     public void mouseClicked(MouseEvent e) {
 	super.mouseClicked(e);
 	this.locClicked = e.getPoint();
-	selected  = getTarget();
-	if(selected !=null){
-	    SelectionAttributes sel = (SelectionAttributes)selected .getAttributes(SelectionAttributes.ID);
+	s  = getTarget();
+	if(s !=null){
+	    SelectionAttributes sel = (SelectionAttributes)s .getAttributes(SelectionAttributes.ID);
 	    sel.toggleSelection();
+	} else {
+	    unselectAll();
 	}
 //	if(!shiftDown()) unselectAll();
     }
@@ -69,17 +78,17 @@ public class ShapesController extends Controller{
     public void mouseDragged(MouseEvent evt) {
 	//LOGGER.log(Level.INFO, "s={0}", s );
 	super.mouseDragged(evt);
-	int dx = evt.getPoint().x-selected .getLoc().x;
-	int dy = evt.getPoint().y-selected .getLoc().y;
-	if(selected !=null) translateSelected(dx, dy); // s define into mousePressed
+	if (this.s == null) return;
+	int dx = evt.getPoint().x-s.getLoc().x;
+	int dy = evt.getPoint().y-s.getLoc().y;
+	translateSelected(dx, dy); // s defined into mousePressed
     }
 
     @Override
     public void keyPressed(KeyEvent evt) {
 	super.keyPressed(evt);
-	LOGGER.log(Level.INFO, "Key used");
 	if((evt.getKeyCode()==KeyEvent.VK_SHIFT)){
-	    shiftDown=true;
+	    shiftDown = true;
 	    LOGGER.log(Level.INFO, "Shift On" );
 	}
     }
@@ -88,7 +97,7 @@ public class ShapesController extends Controller{
     public void keyReleased(KeyEvent evt) {
 	super.keyReleased(evt);
 	if((evt.getKeyCode()==KeyEvent.VK_SHIFT)){
-	    shiftDown=false;
+	    shiftDown = false;
 	    LOGGER.log(Level.INFO, "Shift Off" );
 	}
     }
@@ -98,30 +107,35 @@ public class ShapesController extends Controller{
 	Iterator<Shape> it = model.getIterator();
 	while (it.hasNext()){
 	    Shape current = it.next();
-//	    LOGGER.log(Level.INFO, "[getTarget] Current bounds : {0}",current.getBounds());
 	    if (current.getBounds().contains(this.locClicked)){
-//		LOGGER.log(Level.INFO, "Shape selected : {0}", current);
+		LOGGER.log(Level.INFO, "Shape selected : {0}", current);
 		return current;
 	    }
 	}
 	return null;
     }
 
-    public void translateSelected(int x, int y){
-	LOGGER.log(Level.INFO, "Translate started");
-	LOGGER.log(Level.INFO, "s={0}", selected  );
-	LOGGER.log(Level.INFO, "x={0}", x );
-	LOGGER.log(Level.INFO, "y={0}", y );
-	selected .translate(x, y);
+    public void translateSelected(int dx, int dy){
+//	LOGGER.log(Level.INFO, "Translate started");
+//	LOGGER.log(Level.INFO, "s={0}", s  );
+//	LOGGER.log(Level.INFO, "x={0}", x );
+//	LOGGER.log(Level.INFO, "y={0}", y );
+	s.translate(dx, dy);
 	getView().repaint();
     }
 
     public void unselectAll(){
-	if(selected != null){
-	    SelectionAttributes sel = (SelectionAttributes)selected .getAttributes(SelectionAttributes.ID);
-	    sel.unselect();
-	    selected =null;
+//	if(s != null){
+//	    SelectionAttributes sel = (SelectionAttributes)s .getAttributes(SelectionAttributes.ID);
+//	    sel.unselect();
+//	    this.s = null;
+//	}
+	
+	for (Iterator<Shape> it = ((SCollection)this.getModel()).getIterator(); it.hasNext();){
+	    Shape current = (Shape)it.next();
+	    ((SelectionAttributes)current.getAttributes(SelectionAttributes.ID)).unselect();
 	}
+	this.s = null;
     }
 
     public boolean shiftDown(){  	

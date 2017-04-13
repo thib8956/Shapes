@@ -49,16 +49,13 @@ public class ShapeDraftman implements ShapeVisitor {
 	if (attrs.stroked){
 	    this.graph.setColor(attrs.strokedColor);
 	    this.graph.drawRect(r.x, r.y, r.width, r.height);
-
-	} else {
-	    this.graph.setColor(Color.BLACK);
 	}
 	if (selAttrs.isSelected()) drawHandler(rect.getBounds());
     }
 
     @Override
     public void visitCircle(SCircle circle) {
-	LOGGER.log(Level.INFO, "Calling visitCircle");
+//	LOGGER.log(Level.INFO, "Calling visitCircle");
 
 	ColorAttributes attrs = (ColorAttributes)circle.getAttributes(ColorAttributes.ID);
 	SelectionAttributes selAttrs = (SelectionAttributes)circle.getAttributes(SelectionAttributes.ID);
@@ -87,7 +84,7 @@ public class ShapeDraftman implements ShapeVisitor {
 	else if (colAttrs.filled){
 	    this.graph.setColor(colAttrs.filledColor);
 	    // The reference point for Rectangle is the upper-left corner,
-	    // whereas it is the bottom-left corner for Font (drawString()). 
+	    // whereas it is the bottom-left corner for Font.drawString(). 
 	    this.graph.fillRect(loc.x, loc.y - bounds.height, bounds.width, bounds.height);
 	}
 	this.graph.setFont(fontAttrs.font);
