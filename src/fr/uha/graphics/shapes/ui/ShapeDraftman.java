@@ -6,7 +6,6 @@ import java.awt.Graphics2D;
 import java.awt.Point;
 import java.awt.Rectangle;
 import java.util.Iterator;
-import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import fr.uha.graphics.shapes.SCircle;
@@ -21,98 +20,99 @@ import fr.uha.graphics.shapes.attributes.SelectionAttributes;
 
 public class ShapeDraftman implements ShapeVisitor {
 
-    private static final Logger LOGGER = Logger.getLogger(ShapeDraftman.class.getName());
+	private static final Logger LOGGER = Logger.getLogger(ShapeDraftman.class.getName());
 
-    // Default attributes
-    private static final ColorAttributes DEFAULTCOLORATTRIBUTES = new ColorAttributes(false, true, Color.BLACK, Color.BLACK);
+	// Default attributes
+	private static final ColorAttributes DEFAULTCOLORATTRIBUTES = new ColorAttributes(false, true, Color.BLACK,
+			Color.BLACK);
 
-    private Graphics2D graph;
+	private Graphics2D graph;
 
-    public ShapeDraftman(Graphics graph) {
-	this.graph = (Graphics2D)graph;
-    }
-
-    @Override
-    public void visitRectangle(SRectangle rect) {
-
-//	LOGGER.log(Level.INFO, "Calling visitRectangle");
-	Rectangle r = rect.getRect();
-	ColorAttributes attrs = (ColorAttributes)rect.getAttributes(ColorAttributes.ID);
-	SelectionAttributes selAttrs = (SelectionAttributes)rect.getAttributes(SelectionAttributes.ID);
-
-//	LOGGER.log(Level.INFO, "ColorAttributes : \n{0}", attrs);
-	if (attrs == null) attrs = DEFAULTCOLORATTRIBUTES;
-	else if (attrs.filled){
-	    this.graph.setColor(attrs.filledColor);
-	    this.graph.fillRect(r.x, r.y, r.width, r.height);
+	public ShapeDraftman(Graphics graph) {
+		this.graph = (Graphics2D) graph;
 	}
-	if (attrs.stroked){
-	    this.graph.setColor(attrs.strokedColor);
-	    this.graph.drawRect(r.x, r.y, r.width, r.height);
+
+	@Override
+	public void visitRectangle(SRectangle rect) {
+
+		// LOGGER.log(Level.INFO, "Calling visitRectangle");
+		Rectangle r = rect.getRect();
+		ColorAttributes attrs = (ColorAttributes) rect.getAttributes(ColorAttributes.ID);
+		SelectionAttributes selAttrs = (SelectionAttributes) rect.getAttributes(SelectionAttributes.ID);
+
+		// LOGGER.log(Level.INFO, "ColorAttributes : \n{0}", attrs);
+		if (attrs == null)
+			attrs = DEFAULTCOLORATTRIBUTES;
+		else if (attrs.filled) {
+			this.graph.setColor(attrs.filledColor);
+			this.graph.fillRect(r.x, r.y, r.width, r.height);
+		}
+		if (attrs.stroked) {
+			this.graph.setColor(attrs.strokedColor);
+			this.graph.drawRect(r.x, r.y, r.width, r.height);
+		}
+		if (selAttrs.isSelected()) drawHandler(rect.getBounds());
 	}
-	if (selAttrs.isSelected()) drawHandler(rect.getBounds());
-    }
 
-    @Override
-    public void visitCircle(SCircle circle) {
-//	LOGGER.log(Level.INFO, "Calling visitCircle");
+	@Override
+	public void visitCircle(SCircle circle) {
+		ColorAttributes attrs = (ColorAttributes) circle.getAttributes(ColorAttributes.ID);
+		SelectionAttributes selAttrs = (SelectionAttributes) circle.getAttributes(SelectionAttributes.ID);
+		if (attrs == null)
+			attrs = DEFAULTCOLORATTRIBUTES;
+		else if (attrs.filled) {
+			this.graph.setColor(attrs.filledColor);
+			this.graph.fillOval(circle.getLoc().x, circle.getLoc().y, circle.getRadius(), circle.getRadius());
+		}
+		if (attrs.stroked) this.graph.setColor(attrs.strokedColor);
+		this.graph.drawOval(circle.getLoc().x, circle.getLoc().y, circle.getRadius(), circle.getRadius());
 
-	ColorAttributes attrs = (ColorAttributes)circle.getAttributes(ColorAttributes.ID);
-	SelectionAttributes selAttrs = (SelectionAttributes)circle.getAttributes(SelectionAttributes.ID);
-	if (attrs == null) attrs = DEFAULTCOLORATTRIBUTES;
-	else if (attrs.filled){
-	    this.graph.setColor(attrs.filledColor);
-	    this.graph.fillOval(circle.getLoc().x, circle.getLoc().y, circle.getRadius(), circle.getRadius());
+		if (selAttrs.isSelected()) drawHandler(circle.getBounds());
 	}
-	if (attrs.stroked) this.graph.setColor(attrs.strokedColor);
-	this.graph.drawOval(circle.getLoc().x, circle.getLoc().y, circle.getRadius(), circle.getRadius());
 
-	if (selAttrs.isSelected()) drawHandler(circle.getBounds());
-    }
+	@Override
+	public void visitText(SText text) {
+		Point loc = text.getLoc();
+		Rectangle bounds = text.getBounds();
+		// Fetch SText attributes
+		ColorAttributes colAttrs = (ColorAttributes) text.getAttributes(ColorAttributes.ID);
+		SelectionAttributes selAttrs = (SelectionAttributes) text.getAttributes(SelectionAttributes.ID);
+		FontAttributes fontAttrs = (FontAttributes) text.getAttributes(FontAttributes.ID);
 
-    @Override
-    public void visitText(SText text) {
-	Point loc = text.getLoc();
-	Rectangle bounds = text.getBounds();
-//	LOGGER.log(Level.INFO, "visitText loc={0}, bounds={1}", new Object[]{loc, bounds});
-	// Fetch SText attributes
-	ColorAttributes colAttrs = (ColorAttributes)text.getAttributes(ColorAttributes.ID);
-	SelectionAttributes selAttrs = (SelectionAttributes)text.getAttributes(SelectionAttributes.ID);
-	FontAttributes fontAttrs = (FontAttributes)text.getAttributes(FontAttributes.ID);
+		if (colAttrs == null)
+			colAttrs = DEFAULTCOLORATTRIBUTES;
+		else if (colAttrs.filled) {
+			this.graph.setColor(colAttrs.filledColor);
+			// The reference point for Rectangle is the upper-left corner,
+			// whereas it is the bottom-left corner for Font.drawString().
+			this.graph.fillRect(loc.x, loc.y - bounds.height, bounds.width, bounds.height);
+		}
+		this.graph.setFont(fontAttrs.font);
+		this.graph.setPaint(fontAttrs.fontColor);
+		this.graph.drawString(text.getText(), loc.x, loc.y);
 
-	if (colAttrs == null) colAttrs = DEFAULTCOLORATTRIBUTES;
-	else if (colAttrs.filled){
-	    this.graph.setColor(colAttrs.filledColor);
-	    // The reference point for Rectangle is the upper-left corner,
-	    // whereas it is the bottom-left corner for Font.drawString(). 
-	    this.graph.fillRect(loc.x, loc.y - bounds.height, bounds.width, bounds.height);
+		if (selAttrs.isSelected()) drawHandler(text.getBounds());
 	}
-	this.graph.setFont(fontAttrs.font);
-	this.graph.setPaint(fontAttrs.fontColor);
-	this.graph.drawString(text.getText(), loc.x, loc.y);
 
-	if (selAttrs.isSelected()) drawHandler(text.getBounds());
-    }
+	@Override
+	public void visitCollection(SCollection col) {
+		boolean colSelected = ((SelectionAttributes) col.getAttributes(SelectionAttributes.ID)).isSelected();
 
-    @Override
-    public void visitCollection(SCollection col) {
-	boolean colSelected = ((SelectionAttributes)col.getAttributes(SelectionAttributes.ID)).isSelected();
-	for (Iterator<Shape> it = col.getIterator(); it.hasNext();){
-	    Shape current = (Shape)it.next();
-	    current.accept(this);
-	    // TODO : is it useful to propagate the "selected" attribute to the members ?
-	    //if (colSelected)((SelectionAttributes)current.getAttributes(SelectionAttributes.ID)).select();
+		for (Iterator<Shape> it = col.getIterator(); it.hasNext();) {
+			Shape current = it.next();
+			current.accept(this);
+			// TODO : is it useful to propagate the "selected" attribute to members ?
+		}
+		if (colSelected) drawHandler(col.getBounds());
 	}
-	if (colSelected) drawHandler(col.getBounds());
-    }
 
-    public void drawHandler(Rectangle bounds){
-	this.graph.setColor(Color.RED);
-	this.graph.drawRect(bounds.x-5, bounds.y-5, 5, 5);
-	this.graph.drawRect(bounds.x+bounds.width, bounds.y+bounds.height, 5, 5);
-    }
+	public void drawHandler(Rectangle bounds) {
+		this.graph.setColor(Color.RED);
+		this.graph.drawRect(bounds.x - 5, bounds.y - 5, 5, 5);
+		this.graph.drawRect(bounds.x + bounds.width, bounds.y + bounds.height, 5, 5);
+	}
 
-    public void setGraphics(Graphics g){
-	this.graph = (Graphics2D)g;
-    }
+	public void setGraphics(Graphics g) {
+		this.graph = (Graphics2D) g;
+	}
 }
