@@ -19,10 +19,11 @@ public class ShapesController extends Controller{
     private Shape s;
     private Point locClicked;
 
-
-
     public ShapesController(Shape model) {
 	super(model);
+
+	this.locClicked = new Point();
+	this.shiftDown = false;
     }
 
     @Override
@@ -35,18 +36,10 @@ public class ShapesController extends Controller{
 	super.mousePressed(e);
 	this.locClicked = e.getPoint();
 	if((s=getTarget()) != null){
-	    SelectionAttributes sel = (SelectionAttributes)s .getAttributes(SelectionAttributes.ID);
+	    SelectionAttributes sel = (SelectionAttributes)s.getAttributes(SelectionAttributes.ID);
 	    sel.toggleSelection();
 	}
-	getView().repaint();
-	/*
-	for (Iterator<Shape> it = ((SCollection)this.getModel()).getIterator(); it.hasNext();) {
-	    Shape current = it.next();
-	    SelectionAttributes sattrs = (SelectionAttributes)current.getAttributes(SelectionAttributes.ID);
-	    LOGGER.log(Level.INFO, "Shape {0} isSelected : {1}", new Object[]{current, sattrs.isSelected()});
-
-	}
-	*/	
+	getView().repaint();	
     }
 
     @Override
@@ -64,11 +57,13 @@ public class ShapesController extends Controller{
     public void mouseClicked(MouseEvent e) {
 	super.mouseClicked(e);
 	this.locClicked = e.getPoint();
+	
 	s  = getTarget();
 	if(s !=null){
-	    SelectionAttributes sel = (SelectionAttributes)s .getAttributes(SelectionAttributes.ID);
+	    SelectionAttributes sel = (SelectionAttributes)s.getAttributes(SelectionAttributes.ID);
 	    sel.toggleSelection();
 	} else {
+	    LOGGER.log(Level.INFO, "Point clicked : x={0} y={1}", new Object[]{locClicked.x, locClicked.y});
 	    unselectAll();
 	}
 //	if(!shiftDown()) unselectAll();
@@ -76,29 +71,28 @@ public class ShapesController extends Controller{
 
     @Override
     public void mouseDragged(MouseEvent evt) {
-	//LOGGER.log(Level.INFO, "s={0}", s );
 	super.mouseDragged(evt);
 	if (this.s == null) return;
 	int dx = evt.getPoint().x-s.getLoc().x;
 	int dy = evt.getPoint().y-s.getLoc().y;
-	translateSelected(dx, dy); // s defined into mousePressed
+	translateSelected(dx, dy); // s is defined into mousePressed()
     }
 
     @Override
     public void keyPressed(KeyEvent evt) {
 	super.keyPressed(evt);
-	if((evt.getKeyCode()==KeyEvent.VK_SHIFT)){
+	if((evt.getKeyCode() == KeyEvent.VK_SHIFT)){
 	    shiftDown = true;
-	    LOGGER.log(Level.INFO, "Shift On" );
+	    LOGGER.info("Shift pressed");;
 	}
     }
 
     @Override
     public void keyReleased(KeyEvent evt) {
 	super.keyReleased(evt);
-	if((evt.getKeyCode()==KeyEvent.VK_SHIFT)){
+	if((evt.getKeyCode() == KeyEvent.VK_SHIFT)){
 	    shiftDown = false;
-	    LOGGER.log(Level.INFO, "Shift Off" );
+	    LOGGER.info("Shift released");
 	}
     }
 
@@ -116,26 +110,19 @@ public class ShapesController extends Controller{
     }
 
     public void translateSelected(int dx, int dy){
-//	LOGGER.log(Level.INFO, "Translate started");
-//	LOGGER.log(Level.INFO, "s={0}", s  );
-//	LOGGER.log(Level.INFO, "x={0}", x );
-//	LOGGER.log(Level.INFO, "y={0}", y );
-	s.translate(dx, dy);
+	LOGGER.log(Level.INFO, "Translate started, s={0}", s);
+	LOGGER.log(Level.FINE, "Translate : x={0}, y={1}", new Object[]{s.getLoc().x, s.getLoc().y});
+	this.s.translate(dx, dy);
 	getView().repaint();
     }
 
     public void unselectAll(){
-//	if(s != null){
-//	    SelectionAttributes sel = (SelectionAttributes)s .getAttributes(SelectionAttributes.ID);
-//	    sel.unselect();
-//	    this.s = null;
-//	}
-	
 	for (Iterator<Shape> it = ((SCollection)this.getModel()).getIterator(); it.hasNext();){
 	    Shape current = (Shape)it.next();
 	    ((SelectionAttributes)current.getAttributes(SelectionAttributes.ID)).unselect();
 	}
 	this.s = null;
+	getView().repaint();
     }
 
     public boolean shiftDown(){  	

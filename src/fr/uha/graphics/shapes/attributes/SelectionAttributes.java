@@ -1,7 +1,7 @@
 package fr.uha.graphics.shapes.attributes;
 
 public class SelectionAttributes extends Attributes {
-    public static final String ID = "attributes";
+    public static final String ID = "selection";
     
     private boolean selected;
     

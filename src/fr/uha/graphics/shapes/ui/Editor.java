@@ -23,15 +23,12 @@ public class Editor extends JFrame
 {
     private static final Logger LOGGER = Logger.getLogger(Editor.class.getName());
     private static FileHandler fh = null;
+    private static final Dimension WIN_SIZE = new Dimension(400, 300);
 
-    private static final int DEFAULT_WIN_WIDTH = 400;
-    private static final int DEFAULT_WIN_HEIGHT = 300;
+    private ShapesView sview;
+    private SCollection model;
 
-    ShapesView sview;
-    SCollection model;
-
-    public Editor()
-    {	
+    public Editor(){	
 	super("Shapes Editor");
 
 	this.addWindowListener(new java.awt.event.WindowAdapter()
@@ -46,10 +43,10 @@ public class Editor extends JFrame
 	this.buildModel();
 
 	this.sview = new ShapesView(this.model);
-	this.sview.setPreferredSize(new Dimension(DEFAULT_WIN_WIDTH, DEFAULT_WIN_HEIGHT));
+	this.sview.setPreferredSize(WIN_SIZE);
 	this.getContentPane().add(this.sview, java.awt.BorderLayout.CENTER);
 
-	this.getContentPane().addKeyListener(this.sview.getController());
+	this.getContentPane().addKeyListener(this.sview.getController()); // FIXME : this shouldn't be here (cf. View.java)
     }
 
     public static void initLogger(){
@@ -72,8 +69,6 @@ public class Editor extends JFrame
 	SRectangle r = new SRectangle(new Point(10,10), 40, 60);
 	r.addAttributes(new ColorAttributes(true, true,Color.BLUE,Color.BLACK));
 	r.addAttributes(new SelectionAttributes());
-	LOGGER.log(Level.INFO, "Rectangle color attributes : \n{0}", r.getAttributes(ColorAttributes.ID));
-	LOGGER.log(Level.INFO, "Rectangle selection attributes : \n{0}", r.getAttributes(SelectionAttributes.ID));
 	this.model.add(r);
 
 	SCircle c = new SCircle(new Point(100,100), 30);
@@ -87,18 +82,18 @@ public class Editor extends JFrame
 	t.addAttributes(new SelectionAttributes());
 	this.model.add(t);
 
-
-//		SCollection sc = new SCollection();
-//		sc.addAttributes(new SelectionAttributes());
-//		r= new SRectangle(new Point(20,30), 60, 60);
-//		r.addAttributes(new ColorAttributes(true,false,Color.MAGENTA,Color.BLUE));
-//		r.addAttributes(new SelectionAttributes());
-//		sc.add(r);
-//		c = new SCircle(new Point(150,100), 40);
-//		c.addAttributes(new ColorAttributes(false,true,Color.BLUE,Color.DARK_GRAY));
-//		c.addAttributes(new SelectionAttributes());
-//		sc.add(c);
-//		this.model.add(sc);
+	// TODO : gérer déplacement de SCollection
+	//	SCollection sc = new SCollection();
+	//	sc.addAttributes(new SelectionAttributes());
+	//	r= new SRectangle(new Point(20,30), 60, 60);
+	//	r.addAttributes(new ColorAttributes(true,false,Color.MAGENTA,Color.BLUE));
+	//	r.addAttributes(new SelectionAttributes());
+	//	sc.add(r);
+	//	c = new SCircle(new Point(150,100), 40);
+	//	c.addAttributes(new ColorAttributes(false,true,Color.BLUE,Color.DARK_GRAY));
+	//	c.addAttributes(new SelectionAttributes());
+	//	sc.add(c);
+	//	this.model.add(sc);
 	//	
 	//	Rectangle bounds = sc.getBounds();
 	//	LOGGER.info(bounds.toString());
@@ -116,8 +111,6 @@ public class Editor extends JFrame
 	Editor self = new Editor();
 	self.pack();
 	self.setVisible(true);
-	self.getContentPane().requestFocusInWindow();
-
-
+	self.getContentPane().requestFocus();
     }
 }
