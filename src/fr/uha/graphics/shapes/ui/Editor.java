@@ -66,41 +66,41 @@ public class Editor extends JFrame
 	this.model = new SCollection();
 	this.model.addAttributes(new SelectionAttributes());
 
-	SRectangle r = new SRectangle(new Point(10,10), 40, 60);
-	r.addAttributes(new ColorAttributes(true, true,Color.BLUE,Color.BLACK));
-	r.addAttributes(new SelectionAttributes());
-	this.model.add(r);
-
-	SCircle c = new SCircle(new Point(100,100), 30);
-	c.addAttributes(new ColorAttributes(false,true,Color.RED,Color.RED));
-	c.addAttributes(new SelectionAttributes());
-	this.model.add(c);
-
-	SText t= new SText(new Point(150,150),"hello");
-	t.addAttributes(new ColorAttributes(true,true,Color.YELLOW,Color.BLUE));
-	t.addAttributes(new FontAttributes());
-	t.addAttributes(new SelectionAttributes());
-	this.model.add(t);
-
+//	SRectangle r = new SRectangle(new Point(10,10), 40, 60);
+//	r.addAttributes(new ColorAttributes(true, true,Color.BLUE,Color.BLACK));
+//	r.addAttributes(new SelectionAttributes());
+//	this.model.add(r);
+//
+//	SCircle c = new SCircle(new Point(100,100), 30);
+//	c.addAttributes(new ColorAttributes(false,true,Color.RED,Color.RED));
+//	c.addAttributes(new SelectionAttributes());
+//	this.model.add(c);
+//
+//	SText t= new SText(new Point(150,150),"hello");
+//	t.addAttributes(new ColorAttributes(true,true,Color.YELLOW,Color.BLUE));
+//	t.addAttributes(new FontAttributes());
+//	t.addAttributes(new SelectionAttributes());
+//	this.model.add(t);
+//
 	// TODO : gérer déplacement de SCollection
-	//	SCollection sc = new SCollection();
-	//	sc.addAttributes(new SelectionAttributes());
-	//	r= new SRectangle(new Point(20,30), 60, 60);
-	//	r.addAttributes(new ColorAttributes(true,false,Color.MAGENTA,Color.BLUE));
-	//	r.addAttributes(new SelectionAttributes());
-	//	sc.add(r);
-	//	c = new SCircle(new Point(150,100), 40);
-	//	c.addAttributes(new ColorAttributes(false,true,Color.BLUE,Color.DARK_GRAY));
-	//	c.addAttributes(new SelectionAttributes());
-	//	sc.add(c);
-	//	this.model.add(sc);
-	//	
-	//	Rectangle bounds = sc.getBounds();
-	//	LOGGER.info(bounds.toString());
-	//	SRectangle rect = new SRectangle(new Point(bounds.x, bounds.y), bounds.width, bounds.height);
-	//	rect.addAttributes(new ColorAttributes(false, true, Color.BLACK, Color.BLUE));
-	//	rect.addAttributes(new SelectionAttributes());
-	//	this.model.add(rect);
+	SCollection sc = new SCollection();
+	sc.addAttributes(new SelectionAttributes());
+	SRectangle r= new SRectangle(new Point(20,30), 60, 60);
+	r.addAttributes(new ColorAttributes(true,false,Color.MAGENTA,Color.BLUE));
+	r.addAttributes(new SelectionAttributes());
+	sc.add(r);
+	SCircle c = new SCircle(new Point(150,100), 40);
+	c.addAttributes(new ColorAttributes(false,true,Color.BLUE,Color.DARK_GRAY));
+	c.addAttributes(new SelectionAttributes());
+	sc.add(c);
+	this.model.add(sc);
+
+//	Rectangle bounds = sc.getBounds();
+//	LOGGER.info(bounds.toString());
+//	SRectangle rect = new SRectangle(new Point(bounds.x, bounds.y), bounds.width, bounds.height);
+//	rect.addAttributes(new ColorAttributes(false, true, Color.BLACK, Color.BLUE));
+//	rect.addAttributes(new SelectionAttributes());
+//	this.model.add(rect);
 
     }
 

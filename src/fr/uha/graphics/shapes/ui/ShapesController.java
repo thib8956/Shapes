@@ -35,7 +35,8 @@ public class ShapesController extends Controller{
     public void mousePressed(MouseEvent e) {
 	super.mousePressed(e);
 	this.locClicked = e.getPoint();
-	if((s=getTarget()) != null){
+	s=getTarget();
+	if (s != null){
 	    SelectionAttributes sel = (SelectionAttributes)s.getAttributes(SelectionAttributes.ID);
 	    sel.toggleSelection();
 	}

@@ -96,8 +96,14 @@ public class ShapeDraftman implements ShapeVisitor {
 
     @Override
     public void visitCollection(SCollection col) {
-	Iterator<Shape> it = col.getIterator();
-	while (it.hasNext()) it.next().accept(this);
+	boolean colSelected = ((SelectionAttributes)col.getAttributes(SelectionAttributes.ID)).isSelected();
+	for (Iterator<Shape> it = col.getIterator(); it.hasNext();){
+	    Shape current = (Shape)it.next();
+	    current.accept(this);
+	    // TODO : is it useful to propagate the "selected" attribute to the members ?
+	    //if (colSelected)((SelectionAttributes)current.getAttributes(SelectionAttributes.ID)).select();
+	}
+	if (colSelected) drawHandler(col.getBounds());
     }
 
     public void drawHandler(Rectangle bounds){
