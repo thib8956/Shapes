@@ -84,6 +84,9 @@ public class ShapesController extends Controller {
 		if ((evt.getKeyCode() == KeyEvent.VK_SHIFT)) {
 			shiftDown = true;
 			LOGGER.info("Shift pressed");
+		} else if ((evt.getKeyCode() == KeyEvent.VK_DELETE)){
+			LOGGER.info("Delete pressed");
+			deleteSelected();
 		}
 	}
 
@@ -93,6 +96,8 @@ public class ShapesController extends Controller {
 		if ((evt.getKeyCode() == KeyEvent.VK_SHIFT)) {
 			shiftDown = false;
 			LOGGER.info("Shift released");
+		} else if ((evt.getKeyCode() == KeyEvent.VK_DELETE)){
+			LOGGER.info("Delete released");
 		}
 	}
 
@@ -110,10 +115,18 @@ public class ShapesController extends Controller {
 	}
 
 	public void translateSelected(int dx, int dy) {
-		LOGGER.log(Level.INFO, "Translate started, s={0}", s);
 		LOGGER.log(Level.FINE, "Translate : x={0}, y={1}", new Object[] { s.getLoc().x, s.getLoc().y });
 		this.s.translate(dx, dy);
 		getView().repaint();
+	}
+	
+	public void deleteSelected(){
+		// TODO : IndexOutOfBoundsException while deleting the last shape
+		// is an empy model allowed ?
+		if (s == null) return;
+		((SCollection)this.getModel()).remove(s);
+		unselectAll(); // unselectAll() takes care of the graphical update (repaint).
+		LOGGER.log(Level.INFO, "Removing shape {0}", s);
 	}
 
 	public void unselectAll() {
