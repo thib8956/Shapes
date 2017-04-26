@@ -25,8 +25,7 @@ public class SCollection extends Shape {
 	}
 
 	public void remove(Shape s) {
-		childShapes.remove(s); // TODO: gestion objet inexistant
-		relocate();
+		if (childShapes.remove(s)) relocate();
 	}
 
 	@Override
