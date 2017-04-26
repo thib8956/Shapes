@@ -12,121 +12,121 @@ import fr.uha.graphics.shapes.Shape;
 import fr.uha.graphics.shapes.attributes.SelectionAttributes;
 import fr.uha.graphics.ui.Controller;
 
-public class ShapesController extends Controller{
+public class ShapesController extends Controller {
 
-    private static final Logger LOGGER = Logger.getLogger(ShapesController.class.getName());
-    private boolean shiftDown;
-    private Shape s;
-    private Point locClicked;
+	private static final Logger LOGGER = Logger.getLogger(ShapesController.class.getName());
+	private boolean shiftDown;
+	private Shape s;
+	private Point locClicked;
 
-    public ShapesController(Shape model) {
-	super(model);
+	public ShapesController(Shape model) {
+		super(model);
 
-	this.locClicked = new Point();
-	this.shiftDown = false;
-    }
-
-    @Override
-    public Object getModel() {
-	return super.getModel();
-    }
-
-    @Override
-    public void mousePressed(MouseEvent e) {
-	super.mousePressed(e);
-	this.locClicked = e.getPoint();
-	if((s=getTarget()) != null){
-	    SelectionAttributes sel = (SelectionAttributes)s.getAttributes(SelectionAttributes.ID);
-	    sel.toggleSelection();
+		this.locClicked = new Point();
+		this.shiftDown = false;
 	}
-	getView().repaint();	
-    }
 
-    @Override
-    public void mouseReleased(MouseEvent e) {
-//	if(!shiftDown()) unselectAll();
-	for (Iterator<Shape> it = ((SCollection)this.getModel()).getIterator(); it.hasNext();) {
-	    Shape current = it.next();
-	    SelectionAttributes sattrs = (SelectionAttributes)current.getAttributes(SelectionAttributes.ID);
-	    LOGGER.log(Level.INFO, "Shape {0} isSelected : {1}", new Object[]{current, sattrs.isSelected()});
-
+	@Override
+	public Object getModel() {
+		return super.getModel();
 	}
-    }
 
-    @Override
-    public void mouseClicked(MouseEvent e) {
-	super.mouseClicked(e);
-	this.locClicked = e.getPoint();
-	
-	s  = getTarget();
-	if(s !=null){
-	    SelectionAttributes sel = (SelectionAttributes)s.getAttributes(SelectionAttributes.ID);
-	    sel.toggleSelection();
-	} else {
-	    LOGGER.log(Level.INFO, "Point clicked : x={0} y={1}", new Object[]{locClicked.x, locClicked.y});
-	    unselectAll();
+	@Override
+	public void mousePressed(MouseEvent e) {
+		super.mousePressed(e);
+		if (!shiftDown()) unselectAll();
+		this.locClicked = e.getPoint();
+		s = getTarget();
+		if (s != null) {
+			SelectionAttributes sel = (SelectionAttributes) s.getAttributes(SelectionAttributes.ID);
+			sel.toggleSelection();
+		}
+		getView().repaint();
 	}
-//	if(!shiftDown()) unselectAll();
-    }
 
-    @Override
-    public void mouseDragged(MouseEvent evt) {
-	super.mouseDragged(evt);
-	if (this.s == null) return;
-	int dx = evt.getPoint().x-s.getLoc().x;
-	int dy = evt.getPoint().y-s.getLoc().y;
-	translateSelected(dx, dy); // s is defined into mousePressed()
-    }
+	@Override
+	public void mouseReleased(MouseEvent e) {
+		// if(!shiftDown()) unselectAll();
+		for (Iterator<Shape> it = ((SCollection) this.getModel()).getIterator(); it.hasNext();) {
+			Shape current = it.next();
+			SelectionAttributes sattrs = (SelectionAttributes) current.getAttributes(SelectionAttributes.ID);
+			LOGGER.log(Level.INFO, "Shape {0} isSelected : {1}", new Object[] { current, sattrs.isSelected() });
 
-    @Override
-    public void keyPressed(KeyEvent evt) {
-	super.keyPressed(evt);
-	if((evt.getKeyCode() == KeyEvent.VK_SHIFT)){
-	    shiftDown = true;
-	    LOGGER.info("Shift pressed");;
+		}
 	}
-    }
 
-    @Override
-    public void keyReleased(KeyEvent evt) {
-	super.keyReleased(evt);
-	if((evt.getKeyCode() == KeyEvent.VK_SHIFT)){
-	    shiftDown = false;
-	    LOGGER.info("Shift released");
+	@Override
+	public void mouseClicked(MouseEvent e) {
+		super.mouseClicked(e);
+		this.locClicked = e.getPoint();
+		s = getTarget();
+		if (s != null) {
+			SelectionAttributes sel = (SelectionAttributes) s.getAttributes(SelectionAttributes.ID);
+			sel.toggleSelection();
+		} else {
+			LOGGER.log(Level.INFO, "Point clicked : x={0} y={1}", new Object[] { locClicked.x, locClicked.y });
+			if (!shiftDown()) unselectAll();
+		}
 	}
-    }
 
-    public Shape getTarget(){
-	SCollection model = (SCollection)getModel();
-	Iterator<Shape> it = model.getIterator();
-	while (it.hasNext()){
-	    Shape current = it.next();
-	    if (current.getBounds().contains(this.locClicked)){
-		LOGGER.log(Level.INFO, "Shape selected : {0}", current);
-		return current;
-	    }
+	@Override
+	public void mouseDragged(MouseEvent evt) {
+		super.mouseDragged(evt);
+		if (this.s == null) return;
+		int dx = evt.getPoint().x - s.getLoc().x;
+		int dy = evt.getPoint().y - s.getLoc().y;
+		translateSelected(dx, dy); // s is defined into mousePressed()
 	}
-	return null;
-    }
 
-    public void translateSelected(int dx, int dy){
-	LOGGER.log(Level.INFO, "Translate started, s={0}", s);
-	LOGGER.log(Level.FINE, "Translate : x={0}, y={1}", new Object[]{s.getLoc().x, s.getLoc().y});
-	this.s.translate(dx, dy);
-	getView().repaint();
-    }
-
-    public void unselectAll(){
-	for (Iterator<Shape> it = ((SCollection)this.getModel()).getIterator(); it.hasNext();){
-	    Shape current = (Shape)it.next();
-	    ((SelectionAttributes)current.getAttributes(SelectionAttributes.ID)).unselect();
+	@Override
+	public void keyPressed(KeyEvent evt) {
+		super.keyPressed(evt);
+		if ((evt.getKeyCode() == KeyEvent.VK_SHIFT)) {
+			shiftDown = true;
+			LOGGER.info("Shift pressed");
+		}
 	}
-	this.s = null;
-	getView().repaint();
-    }
 
-    public boolean shiftDown(){  	
-	return this.shiftDown;
-    }
+	@Override
+	public void keyReleased(KeyEvent evt) {
+		super.keyReleased(evt);
+		if ((evt.getKeyCode() == KeyEvent.VK_SHIFT)) {
+			shiftDown = false;
+			LOGGER.info("Shift released");
+		}
+	}
+
+	public Shape getTarget() {
+		SCollection model = (SCollection) getModel();
+		Iterator<Shape> it = model.getIterator();
+		while (it.hasNext()) {
+			Shape current = it.next();
+			if (current.getBounds().contains(this.locClicked)) {
+				LOGGER.log(Level.INFO, "Shape selected : {0}", current);
+				return current;
+			}
+		}
+		return null;
+	}
+
+	public void translateSelected(int dx, int dy) {
+		LOGGER.log(Level.INFO, "Translate started, s={0}", s);
+		LOGGER.log(Level.FINE, "Translate : x={0}, y={1}", new Object[] { s.getLoc().x, s.getLoc().y });
+		this.s.translate(dx, dy);
+		getView().repaint();
+	}
+
+	public void unselectAll() {
+		for (Iterator<Shape> it = ((SCollection) this.getModel()).getIterator(); it.hasNext();) {
+			Shape current = it.next();
+			((SelectionAttributes) current.getAttributes(SelectionAttributes.ID)).unselect();
+		}
+		this.s = null;
+		getView().repaint();
+	}
+
+	public boolean shiftDown() {
+		return this.shiftDown;
+	}
 
 }
