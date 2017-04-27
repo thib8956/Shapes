@@ -98,6 +98,6 @@ public class Editor extends JFrame {
 		Editor self = new Editor();
 		self.pack();
 		self.setVisible(true);
-		self.getContentPane().requestFocus();
+		self.getContentPane().requestFocusInWindow();
 	}
 }
