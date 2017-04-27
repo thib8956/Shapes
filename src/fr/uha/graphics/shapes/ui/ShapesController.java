@@ -125,8 +125,8 @@ public class ShapesController extends Controller {
 		// is an empy model allowed ?
 		if (s == null) return;
 		((SCollection)this.getModel()).remove(s);
-		unselectAll(); // unselectAll() takes care of the graphical update (repaint).
 		LOGGER.log(Level.INFO, "Removing shape {0}", s);
+		unselectAll(); // unselectAll() takes care of the graphical update (repaint).
 	}
 
 	public void unselectAll() {
