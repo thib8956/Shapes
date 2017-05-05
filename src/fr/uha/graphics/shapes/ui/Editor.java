@@ -3,6 +3,8 @@ package fr.uha.graphics.shapes.ui;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Point;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.io.IOException;
 import java.util.logging.FileHandler;
 import java.util.logging.Level;
@@ -10,6 +12,9 @@ import java.util.logging.Logger;
 import java.util.logging.SimpleFormatter;
 
 import javax.swing.JFrame;
+import javax.swing.JMenu;
+import javax.swing.JMenuBar;
+import javax.swing.JMenuItem;
 
 import fr.uha.graphics.shapes.SCircle;
 import fr.uha.graphics.shapes.SCollection;
@@ -18,7 +23,6 @@ import fr.uha.graphics.shapes.SSelection;
 import fr.uha.graphics.shapes.SText;
 import fr.uha.graphics.shapes.STriangle;
 import fr.uha.graphics.shapes.attributes.ColorAttributes;
-import fr.uha.graphics.shapes.attributes.FontAttributes;
 import fr.uha.graphics.shapes.attributes.SelectionAttributes;
 
 public class Editor extends JFrame {
@@ -28,6 +32,7 @@ public class Editor extends JFrame {
 
 	private ShapesView sview;
 	protected static SCollection model;
+	private JMenuBar menubar;
 
 	public Editor() {
 		super("Shapes Editor");
@@ -40,6 +45,7 @@ public class Editor extends JFrame {
 		});
 
 		this.buildModel();
+		this.buildMenu();
 
 		this.sview = new ShapesView(this.model);
 		this.sview.setPreferredSize(WIN_SIZE);
@@ -100,6 +106,64 @@ public class Editor extends JFrame {
 //		tri.addAttributes(new ColorAttributes(true, true, Color.YELLOW, Color.BLACK));
 //		tri.addAttributes(new SelectionAttributes());
 //		this.model.add(tri);
+
+	}
+	
+	private void buildMenu(){
+		this.menubar = new JMenuBar();
+		JMenu menuAdd = new JMenu("Add");
+		JMenuItem addRectItem = new JMenuItem("Add SRectangle");
+		JMenuItem addCircleItem = new JMenuItem("Add SCircle");
+		JMenuItem addTriItem = new JMenuItem("Add STriangle");
+		
+		addRectItem.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				SRectangle r = new SRectangle(new Point(WIN_SIZE.height/2, WIN_SIZE.width/2), 50, 50);
+				r.addAttributes(new ColorAttributes(true, false, randomColor(), null));
+				r.addAttributes(new SelectionAttributes());
+				model.add(r);
+				sview.repaint();
+			}
+		});
+		
+		addCircleItem.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				SCircle c = new SCircle(new Point(WIN_SIZE.height/2, WIN_SIZE.width/2), 50);
+				c.addAttributes(new SelectionAttributes());
+				c.addAttributes(new ColorAttributes(true, false, randomColor(), null));
+				model.add(c);
+				sview.repaint();
+			}
+		});
+		
+		addTriItem.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				STriangle t = new STriangle(new Point(WIN_SIZE.height/2, WIN_SIZE.width/2), 50);
+				t.addAttributes(new SelectionAttributes());
+				t.addAttributes(new ColorAttributes(true, false, randomColor(), null));
+				model.add(t);
+				sview.repaint();
+			}
+		});
+		menuAdd.add(addRectItem);
+		menuAdd.add(addCircleItem);
+		menuAdd.add(addTriItem);
+		
+		JMenuItem backItem = new JMenuItem("Back");
+		JMenuItem forwardItem = new JMenuItem("Forward");
+		
+		menubar.add(menuAdd);
+		menubar.add(backItem);
+		menubar.add(forwardItem);
+
+		this.setJMenuBar(this.menubar);
+	}
+	
+	private Color randomColor(){
+		return new Color((int)(Math.random() * 0x1000000));
 	}
 
 	public static void main(String[] args) {
