@@ -42,9 +42,6 @@ public class Editor extends JFrame {
 		this.sview = new ShapesView(this.model);
 		this.sview.setPreferredSize(WIN_SIZE);
 		this.getContentPane().add(this.sview, java.awt.BorderLayout.CENTER);
-
-		// FIXME : this should not be needed (cf. View.java)
-		this.getContentPane().addKeyListener(this.sview.getController());
 	}
 
 	public static void initLogger() {
@@ -97,7 +94,8 @@ public class Editor extends JFrame {
 
 		Editor self = new Editor();
 		self.pack();
+		self.sview.requestFocusInWindow();
 		self.setVisible(true);
-		self.getContentPane().requestFocus();
+		
 	}
 }
