@@ -3,8 +3,6 @@ package fr.uha.graphics.shapes.ui;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Point;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.io.IOException;
 import java.util.logging.FileHandler;
 import java.util.logging.Level;
@@ -22,13 +20,15 @@ import fr.uha.graphics.shapes.SRectangle;
 import fr.uha.graphics.shapes.SSelection;
 import fr.uha.graphics.shapes.SText;
 import fr.uha.graphics.shapes.STriangle;
+import fr.uha.graphics.shapes.SText;
 import fr.uha.graphics.shapes.attributes.ColorAttributes;
+import fr.uha.graphics.shapes.attributes.FontAttributes;
 import fr.uha.graphics.shapes.attributes.SelectionAttributes;
 
 public class Editor extends JFrame {
 	private static final Logger LOGGER = Logger.getLogger(Editor.class.getName());
 	private static FileHandler fh = null;
-	private static final Dimension WIN_SIZE = new Dimension(800, 600);
+	public static final Dimension WIN_SIZE = new Dimension(800, 600);
 
 	private ShapesView sview;
 	protected static SCollection model;
@@ -45,11 +45,11 @@ public class Editor extends JFrame {
 		});
 
 		this.buildModel();
-		this.buildMenu();
 
 		this.sview = new ShapesView(this.model);
 		this.sview.setPreferredSize(WIN_SIZE);
 		this.getContentPane().add(this.sview, java.awt.BorderLayout.CENTER);
+		this.buildMenu();
 	}
 
 	private static void initLogger() {
@@ -83,24 +83,24 @@ public class Editor extends JFrame {
 		c.addAttributes(new SelectionAttributes());
 		this.model.add(c);
 //
-//		SText t = new SText(new Point(150, 150), "hello");
-//		t.addAttributes(new ColorAttributes(true, true, Color.YELLOW, Color.BLUE));
-//		t.addAttributes(new FontAttributes());
-//		t.addAttributes(new SelectionAttributes());
-//		this.model.add(t);
-//
-//		SCollection sc = new SCollection();
-//		sc.addAttributes(new SelectionAttributes());
-//		r = new SRectangle(new Point(20, 30), 60, 60);
-//		r.addAttributes(new ColorAttributes(true, false, Color.MAGENTA, Color.BLUE));
-//		r.addAttributes(new SelectionAttributes());
-//		sc.add(r);
-//		
-//		c = new SCircle(new Point(150, 100), 40);
-//		c.addAttributes(new ColorAttributes(false, true, Color.BLUE, Color.DARK_GRAY));
-//		c.addAttributes(new SelectionAttributes());
-//		sc.add(c);
-//		this.model.add(sc);
+		SText t = new SText(new Point(150, 150), "hello");
+		t.addAttributes(new ColorAttributes(true, true, Color.YELLOW, Color.BLUE));
+		t.addAttributes(new FontAttributes());
+		t.addAttributes(new SelectionAttributes());
+		this.model.add(t);
+
+		SCollection sc = new SCollection();
+		sc.addAttributes(new SelectionAttributes());
+		SRectangle r = new SRectangle(new Point(20, 30), 60, 60);
+		r.addAttributes(new ColorAttributes(true, false, Color.MAGENTA, Color.BLUE));
+		r.addAttributes(new SelectionAttributes());
+		sc.add(r);
+		
+		SCircle c = new SCircle(new Point(150, 100), 40);
+		c.addAttributes(new ColorAttributes(false, true, Color.BLUE, Color.DARK_GRAY));
+		c.addAttributes(new SelectionAttributes());
+		sc.add(c);
+		this.model.add(sc);
 //
 //		STriangle tri = new STriangle(new Point(200, 200), 50);
 //		tri.addAttributes(new ColorAttributes(true, true, Color.YELLOW, Color.BLACK));
@@ -116,38 +116,9 @@ public class Editor extends JFrame {
 		JMenuItem addCircleItem = new JMenuItem("Add SCircle");
 		JMenuItem addTriItem = new JMenuItem("Add STriangle");
 		
-		addRectItem.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				SRectangle r = new SRectangle(new Point(WIN_SIZE.height/2, WIN_SIZE.width/2), 50, 50);
-				r.addAttributes(new ColorAttributes(true, false, randomColor(), null));
-				r.addAttributes(new SelectionAttributes());
-				model.add(r);
-				sview.repaint();
-			}
-		});
-		
-		addCircleItem.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				SCircle c = new SCircle(new Point(WIN_SIZE.height/2, WIN_SIZE.width/2), 50);
-				c.addAttributes(new SelectionAttributes());
-				c.addAttributes(new ColorAttributes(true, false, randomColor(), null));
-				model.add(c);
-				sview.repaint();
-			}
-		});
-		
-		addTriItem.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				STriangle t = new STriangle(new Point(WIN_SIZE.height/2, WIN_SIZE.width/2), 50);
-				t.addAttributes(new SelectionAttributes());
-				t.addAttributes(new ColorAttributes(true, false, randomColor(), null));
-				model.add(t);
-				sview.repaint();
-			}
-		});
+		addRectItem.addActionListener(new MenuAddListener("SRectangle", model, sview));
+		addCircleItem.addActionListener(new MenuAddListener("SCircle", model, sview));
+		addTriItem.addActionListener(new MenuAddListener("STriangle", model, sview));
 		menuAdd.add(addRectItem);
 		menuAdd.add(addCircleItem);
 		menuAdd.add(addTriItem);
@@ -160,10 +131,6 @@ public class Editor extends JFrame {
 		menubar.add(forwardItem);
 
 		this.setJMenuBar(this.menubar);
-	}
-	
-	private Color randomColor(){
-		return new Color((int)(Math.random() * 0x1000000));
 	}
 
 	public static void main(String[] args) {

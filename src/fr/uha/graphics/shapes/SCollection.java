@@ -7,6 +7,8 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.logging.Logger;
 
+import fr.uha.graphics.shapes.ui.Editor;
+
 public class SCollection extends Shape {
 
 	private static final Logger LOGGER = Logger.getLogger(SCollection.class.getName());
@@ -48,9 +50,16 @@ public class SCollection extends Shape {
 
 	@Override
 	public Rectangle getBounds() {
-		Rectangle bounds = childShapes.get(0).getBounds();
-		for (Shape s : childShapes)
-			bounds = bounds.union(s.getBounds());
+		Rectangle bounds;
+		try {
+			bounds = childShapes.get(0).getBounds();
+			for (Shape s : childShapes)
+				bounds = bounds.union(s.getBounds());
+		} catch (IndexOutOfBoundsException e){
+			// If the SCollection is empty, set the bounds to fill the window
+			// TODO create a class with global constants ?
+			return new Rectangle(Editor.WIN_SIZE);
+		}
 		return bounds;
 	}
 
