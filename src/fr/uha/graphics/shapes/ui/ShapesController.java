@@ -3,6 +3,7 @@ package fr.uha.graphics.shapes.ui;
 import java.awt.Point;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -16,7 +17,6 @@ public class ShapesController extends Controller {
 
 	private static final Logger LOGGER = Logger.getLogger(ShapesController.class.getName());
 	private boolean shiftDown;
-	private Shape s;
 	private Point locClicked;
 
 	public ShapesController(Shape model) {
@@ -36,7 +36,7 @@ public class ShapesController extends Controller {
 		super.mousePressed(e);
 		if (!shiftDown()) unselectAll();
 		this.locClicked = e.getPoint();
-		s = getTarget();
+		Shape s = getTarget();
 		if (s != null) {
 			SelectionAttributes sel = (SelectionAttributes) s.getAttributes(SelectionAttributes.ID);
 			sel.toggleSelection();
@@ -59,7 +59,7 @@ public class ShapesController extends Controller {
 	public void mouseClicked(MouseEvent e) {
 		super.mouseClicked(e);
 		this.locClicked = e.getPoint();
-		s = getTarget();
+		Shape s = getTarget();
 		if (s != null) {
 			SelectionAttributes sel = (SelectionAttributes) s.getAttributes(SelectionAttributes.ID);
 			sel.toggleSelection();
@@ -72,10 +72,20 @@ public class ShapesController extends Controller {
 	@Override
 	public void mouseDragged(MouseEvent evt) {
 		super.mouseDragged(evt);
-		if (this.s == null) return;
-		int dx = evt.getPoint().x - s.getLoc().x;
-		int dy = evt.getPoint().y - s.getLoc().y;
-		translateSelected(dx, dy); // s is defined into mousePressed()
+		//		if (this.s == null) return;
+		//		int dx = evt.getPoint().x - s.getLoc().x;
+		//		int dy = evt.getPoint().y - s.getLoc().y;
+
+		for (Iterator<Shape> it = ((SCollection) this.getModel()).getIterator(); it.hasNext();) {
+			Shape current = it.next();
+			if(((SelectionAttributes) current.getAttributes(SelectionAttributes.ID)).isSelected()){	
+				int dx = evt.getPoint().x - current.getLoc().x;
+				int dy = evt.getPoint().y - current.getLoc().y;
+				translateSelected(dx, dy); // s is defined into mousePressed()
+			}
+		}
+
+
 	}
 
 	@Override
@@ -115,17 +125,30 @@ public class ShapesController extends Controller {
 	}
 
 	public void translateSelected(int dx, int dy) {
-		LOGGER.log(Level.FINE, "Translate : x={0}, y={1}", new Object[] { s.getLoc().x, s.getLoc().y });
-		this.s.translate(dx, dy);
+		//LOGGER.log(Level.FINE, "Translate : x={0}, y={1}", new Object[] { s.getLoc().x, s.getLoc().y });
+		for (Iterator<Shape> it = ((SCollection) this.getModel()).getIterator(); it.hasNext();) {
+			Shape current = it.next();
+			if(((SelectionAttributes) current.getAttributes(SelectionAttributes.ID)).isSelected()){	
+				current.translate(dx,dy);
+			}
+		}
 		getView().repaint();
 	}
-	
+
 	public void deleteSelected(){
 		// TODO : IndexOutOfBoundsException while deleting the last shape
 		// is an empy model allowed ?
-		if (s == null) return;
-		((SCollection)this.getModel()).remove(s);
-		LOGGER.log(Level.INFO, "Removing shape {0}", s);
+		ArrayList<Shape> toDelet = new ArrayList<Shape>();
+		for (Iterator<Shape> it = ((SCollection) this.getModel()).getIterator(); it.hasNext();) {
+			Shape current = it.next();
+			if(((SelectionAttributes) current.getAttributes(SelectionAttributes.ID)).isSelected()){	
+				toDelet.add(current);
+			}
+		}
+		for (Shape current: toDelet){
+			LOGGER.log(Level.INFO, "Removing shape {0}", current);
+			((SCollection)this.getModel()).remove(current);
+		}
 		unselectAll(); // unselectAll() takes care of the graphical update (repaint).
 	}
 
@@ -134,7 +157,6 @@ public class ShapesController extends Controller {
 			Shape current = it.next();
 			((SelectionAttributes) current.getAttributes(SelectionAttributes.ID)).unselect();
 		}
-		this.s = null;
 		getView().repaint();
 	}
 
