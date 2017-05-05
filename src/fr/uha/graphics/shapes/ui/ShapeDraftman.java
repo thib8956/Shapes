@@ -12,6 +12,7 @@ import fr.uha.graphics.shapes.SCircle;
 import fr.uha.graphics.shapes.SCollection;
 import fr.uha.graphics.shapes.SRectangle;
 import fr.uha.graphics.shapes.SText;
+import fr.uha.graphics.shapes.STriangle;
 import fr.uha.graphics.shapes.Shape;
 import fr.uha.graphics.shapes.ShapeVisitor;
 import fr.uha.graphics.shapes.attributes.ColorAttributes;
@@ -106,6 +107,28 @@ public class ShapeDraftman implements ShapeVisitor {
 		if (colSelected) drawHandler(col.getBounds());
 	}
 
+	public void visitTriangle(STriangle tri){
+		Point loc = tri.getLoc();
+		int size = tri.getSize();
+		ColorAttributes attrs = (ColorAttributes) tri.getAttributes(ColorAttributes.ID);
+		SelectionAttributes selAttrs = (SelectionAttributes) tri.getAttributes(SelectionAttributes.ID);
+		
+		if (attrs == null)
+			attrs = DEFAULTCOLORATTRIBUTES;
+		else if (attrs.filled) {
+			this.graph.setColor(attrs.filledColor);
+			this.graph.fillPolygon(new int[]{loc.x, loc.x+(size/2), loc.x + size},
+								   new int[]{loc.y+size, loc.y, loc.y+size}, 
+								   3);
+		}
+		if (attrs.stroked) this.graph.setColor(attrs.strokedColor);
+		this.graph.drawPolygon(new int[]{loc.x, loc.x+(size/2), loc.x + size},
+							   new int[]{loc.y+size, loc.y, loc.y+size}, 
+							   3);
+
+		if (selAttrs.isSelected()) drawHandler(tri.getBounds());
+	}
+	
 	public void drawHandler(Rectangle bounds) {
 		this.graph.setColor(Color.RED);
 		this.graph.drawRect(bounds.x - 5, bounds.y - 5, 5, 5);

@@ -15,6 +15,7 @@ import fr.uha.graphics.shapes.SCircle;
 import fr.uha.graphics.shapes.SCollection;
 import fr.uha.graphics.shapes.SRectangle;
 import fr.uha.graphics.shapes.SText;
+import fr.uha.graphics.shapes.STriangle;
 import fr.uha.graphics.shapes.attributes.ColorAttributes;
 import fr.uha.graphics.shapes.attributes.FontAttributes;
 import fr.uha.graphics.shapes.attributes.SelectionAttributes;
@@ -82,11 +83,17 @@ public class Editor extends JFrame {
 		r.addAttributes(new ColorAttributes(true, false, Color.MAGENTA, Color.BLUE));
 		r.addAttributes(new SelectionAttributes());
 		sc.add(r);
+		
 		c = new SCircle(new Point(150, 100), 40);
 		c.addAttributes(new ColorAttributes(false, true, Color.BLUE, Color.DARK_GRAY));
 		c.addAttributes(new SelectionAttributes());
 		sc.add(c);
 		this.model.add(sc);
+
+		STriangle tri = new STriangle(new Point(200, 200), 50);
+		tri.addAttributes(new ColorAttributes(true, true, Color.YELLOW, Color.BLACK));
+		tri.addAttributes(new SelectionAttributes());
+		this.model.add(tri);
 	}
 
 	public static void main(String[] args) {
@@ -96,6 +103,6 @@ public class Editor extends JFrame {
 		self.pack();
 		self.sview.requestFocusInWindow();
 		self.setVisible(true);
-		
+
 	}
 }
