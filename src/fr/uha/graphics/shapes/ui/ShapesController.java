@@ -16,7 +16,7 @@ import fr.uha.graphics.shapes.Shape;
 import fr.uha.graphics.shapes.attributes.SelectionAttributes;
 import fr.uha.graphics.ui.Controller;
 
-public class ShapesController extends Controller implements Cloneable {
+public class ShapesController extends Controller {
 
 	private static final Logger LOGGER = Logger.getLogger(ShapesController.class.getName());
 	private boolean shiftDown;
@@ -168,7 +168,7 @@ public class ShapesController extends Controller implements Cloneable {
 			ListIterator<Shape> it = del_mem.listIterator();
 			while(it.hasNext()){
 				Shape str = it.next();
-				Editor.model.add(str);
+				((SCollection) getModel()).add(str);
 			}
 			del_mem.clear();
 			getView().repaint();
@@ -188,7 +188,7 @@ public class ShapesController extends Controller implements Cloneable {
 			ListIterator<Shape> it = copy_mem.listIterator();
 			while(it.hasNext()){
 				Shape str = it.next();
-				Editor.model.add(str);
+				((SCollection) getModel()).add(str);
 			}
 			copy_mem.clear();
 			getView().repaint();

@@ -7,6 +7,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.logging.Logger;
 
+import fr.uha.graphics.shapes.attributes.Attributes;
 import fr.uha.graphics.shapes.ui.Editor;
 
 public class SCollection extends Shape {
@@ -46,6 +47,13 @@ public class SCollection extends Shape {
 			s.translate(dx, dy);
 		}
 		relocate();
+	}
+
+	@Override
+	public void addAttributes(Attributes attrs) {
+		super.addAttributes(attrs);
+		// Propagate all atrributes to the members of SCollection.
+		for (Shape s : this.childShapes) s.addAttributes(attrs);
 	}
 
 	@Override

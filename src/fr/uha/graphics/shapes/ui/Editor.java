@@ -9,6 +9,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.logging.SimpleFormatter;
 
+import javax.swing.JCheckBoxMenuItem;
 import javax.swing.JFrame;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
@@ -18,12 +19,10 @@ import fr.uha.graphics.shapes.SCircle;
 import fr.uha.graphics.shapes.SCollection;
 import fr.uha.graphics.shapes.SRectangle;
 import fr.uha.graphics.shapes.SSelection;
-import fr.uha.graphics.shapes.SText;
-import fr.uha.graphics.shapes.STriangle;
-import fr.uha.graphics.shapes.SText;
 import fr.uha.graphics.shapes.attributes.ColorAttributes;
-import fr.uha.graphics.shapes.attributes.FontAttributes;
 import fr.uha.graphics.shapes.attributes.SelectionAttributes;
+import fr.uha.graphics.shapes.ui.menu.MenuAddListener;
+import fr.uha.graphics.shapes.ui.menu.MenuEditListener;
 
 public class Editor extends JFrame {
 	private static final Logger LOGGER = Logger.getLogger(Editor.class.getName());
@@ -31,7 +30,7 @@ public class Editor extends JFrame {
 	public static final Dimension WIN_SIZE = new Dimension(800, 600);
 
 	private ShapesView sview;
-	protected static SCollection model;
+	private SCollection model;
 	private JMenuBar menubar;
 
 	public Editor() {
@@ -83,20 +82,20 @@ public class Editor extends JFrame {
 		c.addAttributes(new SelectionAttributes());
 		this.model.add(c);
 //
-		SText t = new SText(new Point(150, 150), "hello");
-		t.addAttributes(new ColorAttributes(true, true, Color.YELLOW, Color.BLUE));
-		t.addAttributes(new FontAttributes());
-		t.addAttributes(new SelectionAttributes());
-		this.model.add(t);
+//		SText t = new SText(new Point(150, 150), "hello");
+//		t.addAttributes(new ColorAttributes(true, true, Color.YELLOW, Color.BLUE));
+//		t.addAttributes(new FontAttributes());
+//		t.addAttributes(new SelectionAttributes());
+//		this.model.add(t);
 
 		SCollection sc = new SCollection();
 		sc.addAttributes(new SelectionAttributes());
-		SRectangle r = new SRectangle(new Point(20, 30), 60, 60);
+		r = new SRectangle(new Point(20, 30), 60, 60);
 		r.addAttributes(new ColorAttributes(true, false, Color.MAGENTA, Color.BLUE));
 		r.addAttributes(new SelectionAttributes());
 		sc.add(r);
 		
-		SCircle c = new SCircle(new Point(150, 100), 40);
+		c = new SCircle(new Point(150, 100), 40);
 		c.addAttributes(new ColorAttributes(false, true, Color.BLUE, Color.DARK_GRAY));
 		c.addAttributes(new SelectionAttributes());
 		sc.add(c);
@@ -111,25 +110,40 @@ public class Editor extends JFrame {
 	
 	private void buildMenu(){
 		this.menubar = new JMenuBar();
+		
+		// Add menu
 		JMenu menuAdd = new JMenu("Add");
 		JMenuItem addRectItem = new JMenuItem("Add SRectangle");
 		JMenuItem addCircleItem = new JMenuItem("Add SCircle");
 		JMenuItem addTriItem = new JMenuItem("Add STriangle");
-		
+		JMenuItem addTextItem = new JMenuItem("Add SText");
 		addRectItem.addActionListener(new MenuAddListener("SRectangle", model, sview));
 		addCircleItem.addActionListener(new MenuAddListener("SCircle", model, sview));
 		addTriItem.addActionListener(new MenuAddListener("STriangle", model, sview));
+		addTextItem.addActionListener(new MenuAddListener("SText", model, sview));
 		menuAdd.add(addRectItem);
 		menuAdd.add(addCircleItem);
 		menuAdd.add(addTriItem);
+		menuAdd.add(addTextItem);
 		
-		JMenuItem backItem = new JMenuItem("Back");
-		JMenuItem forwardItem = new JMenuItem("Forward");
+		// Edit menu
+		MenuEditListener editListener = new MenuEditListener(model, sview);
+		JMenu menuEdit = new JMenu("Edit");
+		JMenuItem editColor = new JMenuItem("Change color");
+		JCheckBoxMenuItem editFill = new JCheckBoxMenuItem("Fill Shape");
+		JCheckBoxMenuItem editBorder = new JCheckBoxMenuItem("Draw border");
+		editColor.addActionListener(editListener);
+		editFill.addActionListener(editListener);
+		editBorder.addActionListener(editListener);
+		
+		
+		menuEdit.add(editColor);
+		menuEdit.addSeparator();
+		menuEdit.add(editBorder);
+		menuEdit.add(editFill);
 		
 		menubar.add(menuAdd);
-		menubar.add(backItem);
-		menubar.add(forwardItem);
-
+		menubar.add(menuEdit);
 		this.setJMenuBar(this.menubar);
 	}
 
