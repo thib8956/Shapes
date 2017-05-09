@@ -24,7 +24,7 @@ import fr.uha.graphics.shapes.attributes.SelectionAttributes;
 public class Editor extends JFrame {
 	private static final Logger LOGGER = Logger.getLogger(Editor.class.getName());
 	private static FileHandler fh = null;
-	private static final Dimension WIN_SIZE = new Dimension(400, 300);
+	private static final Dimension WIN_SIZE = new Dimension(800, 600);
 
 	private ShapesView sview;
 	private SCollection model;
@@ -46,7 +46,7 @@ public class Editor extends JFrame {
 		this.getContentPane().add(this.sview, java.awt.BorderLayout.CENTER);
 	}
 
-	public static void initLogger() {
+	private static void initLogger() {
 		try {
 			fh = new FileHandler("Shapes.log", false);
 		} catch (SecurityException | IOException e) {
@@ -64,7 +64,7 @@ public class Editor extends JFrame {
 		
 		SSelection sel=new SSelection(new Point (0,0),0,0);
 		sel.addAttributes(new ColorAttributes(false, true, Color.BLACK, Color.BLACK));
-		sel.addAttributes(new SelectionAttributes());
+//		sel.addAttributes(new SelectionAttributes());
 		this.model.add(sel);
 		
 		SRectangle r = new SRectangle(new Point(10, 10), 40, 60);
