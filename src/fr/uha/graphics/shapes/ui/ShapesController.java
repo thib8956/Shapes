@@ -30,6 +30,7 @@ public class ShapesController extends Controller implements Cloneable {
 
 		this.locClicked = new Point();
 		this.shiftDown = false;
+		this.sel = new SSelection();
 	}
 
 	@Override
@@ -40,39 +41,19 @@ public class ShapesController extends Controller implements Cloneable {
 	@Override
 	public void mousePressed(MouseEvent e) {
 		super.mousePressed(e);
-		if (!shiftDown()) unselectAll();
 		this.locClicked = e.getPoint();
-		Shape s = getTarget();
-		if (s != null) {
-			SelectionAttributes sel = (SelectionAttributes) s.getAttributes(SelectionAttributes.ID);
-			sel.toggleSelection();
+		Shape target = getTarget();
+		
+		if (!shiftDown()){
+			unselectAll();
+		} 
+		if (target != null){
+			SelectionAttributes selAttrs = (SelectionAttributes) target.getAttributes(SelectionAttributes.ID);
+			if (selAttrs != null){
+				selAttrs.toggleSelection();
+			}
 		}
 		getView().repaint();
-	}
-
-	@Override
-	public void mouseReleased(MouseEvent e) {
-		// if(!shiftDown()) unselectAll();
-		for (Iterator<Shape> it = ((SCollection) this.getModel()).getIterator(); it.hasNext();) {
-			Shape current = it.next();
-			LOGGER.log(Level.INFO, "Selector size: {0}",new Object[] { sel.getBounds()});
-
-			if (sel.getBounds().contains(current.getLoc())) {
-				((SelectionAttributes) current.getAttributes(SelectionAttributes.ID)).select();
-				getView().repaint();
-			}
-
-		}
-
-		
-		for (Iterator<Shape> it = ((SCollection) this.getModel()).getIterator(); it.hasNext();) {
-			Shape current = it.next();
-			if(current instanceof SSelection){
-				((SSelection)current).setLoc(new Point(0,0));
-				((SSelection)current).resize(0, 0);
-				getView().repaint();
-			}
-		}
 	}
 
 	@Override
@@ -90,55 +71,83 @@ public class ShapesController extends Controller implements Cloneable {
 		} else {
 			LOGGER.log(Level.INFO, "Point clicked : x={0} y={1}", new Object[] { locClicked.x, locClicked.y });
 			if (!shiftDown()) unselectAll();
-		}
+	}
 
+	@Override
+	public void mouseReleased(MouseEvent e) {
+		SSelection currentSSelection = this.sel;
+		for (Iterator<Shape> it = ((SCollection) this.getModel()).getIterator(); it.hasNext();) {
+			Shape current = it.next();
+//			SelectionAttributes attrs = (SelectionAttributes) current.getAttributes(SelectionAttributes.ID);
+//			LOGGER.log(Level.INFO, "Selector size: {0}", new Object[] {sel.getBounds()});
+//			LOGGER.log(Level.INFO, "Current : {0}, loc : {1}", new Object[]{current, loc.toString()});
+			
+			if (this.sel.getBounds().contains(current.getBounds())) {
+//				if (attrs != null) attrs.select();
+				select(current);
+				getView().repaint();
+			}
+			if (current instanceof SSelection) current = currentSSelection;
+		}
+		currentSSelection.setLoc(new Point(0, 0));
+		currentSSelection.resize(0, 0);
+		this.sel = currentSSelection;
+		getView().repaint();
+//		for (Iterator<Shape> it = ((SCollection) this.getModel()).getIterator(); it.hasNext();) {
+//			Shape current = it.next();
+//			
+//		}
 	}
 
 	@Override
 	public void mouseDragged(MouseEvent evt) {
 		super.mouseDragged(evt);
-		//SSelection sel = new SSelection(new Point (0,0),0,0);
-		if (!isShapeSel()){
-
-			for (Iterator<Shape> it = ((SCollection) this.getModel()).getIterator(); it.hasNext();) {
-				Shape current = it.next();
-				if (current instanceof SSelection){
-					sel = (SSelection) current;
-					sel.setLoc(this.locClicked);
-					sel.resize(evt.getX()-this.locClicked.x,evt.getY()-this.locClicked.y);
-					getView().repaint();
-
-				}
-				if (sel.getBounds().contains(current.getLoc())) {
-					((SelectionAttributes) current.getAttributes(SelectionAttributes.ID)).isSelected();
-					getView().repaint();
-				}
-			}
-		}
-
-
-
-
+		boolean anyShapeSelected = isShapeSel();
+		
 		for (Iterator<Shape> it = ((SCollection) this.getModel()).getIterator(); it.hasNext();) {
 			Shape current = it.next();
-			if(((SelectionAttributes) current.getAttributes(SelectionAttributes.ID)).isSelected()){	
+
+			if ((!anyShapeSelected) && (current instanceof SSelection)) {
+				this.sel = (SSelection) current;
+				this.sel.setLoc(this.locClicked);
+				this.sel.resize(evt.getX()-this.locClicked.x, evt.getY()-this.locClicked.y);
+				getView().repaint();
+			}
+			// Translate all selected shapes.
+			if(isSelected(current)){	
 				int dx = evt.getPoint().x - current.getLoc().x;
 				int dy = evt.getPoint().y - current.getLoc().y;
-				translateSelected(dx, dy); // s is defined into mousePressed()
+				translateSelected(dx, dy);
 			}
 		}
 
-
 	}
-
+	
+	@Deprecated
 	private boolean isShapeSel(){
 		for (Iterator<Shape> it = ((SCollection) this.getModel()).getIterator(); it.hasNext();) {
 			Shape current = it.next();
-			if(((SelectionAttributes) current.getAttributes(SelectionAttributes.ID)).isSelected()){	
+			SelectionAttributes attrs = (SelectionAttributes) current.getAttributes(SelectionAttributes.ID);
+			if((attrs != null)&&(attrs.isSelected())){	
 				return true;
 			}
 		}
 		return false;
+	}
+	
+	private boolean isSelected(Shape s){
+		SelectionAttributes attrs = (SelectionAttributes) s.getAttributes(SelectionAttributes.ID);
+		if (attrs == null) return false;
+		return attrs.isSelected();
+	}
+	
+	private int select(Shape s){
+		LOGGER.log(Level.INFO, "Selecting {0}", s);
+		SelectionAttributes attrs = (SelectionAttributes) s.getAttributes(SelectionAttributes.ID);
+		// If this shape has no selection attributes
+		if (attrs == null) return -1; 
+		attrs.select();
+		return 0;
 	}
 
 	@Override
@@ -193,6 +202,7 @@ public class ShapesController extends Controller implements Cloneable {
 			LOGGER.info("Shift released");
 		} else if ((evt.getKeyCode() == KeyEvent.VK_DELETE)){
 			LOGGER.info("Delete released");
+			deleteSelected();
 		}
 	}
 
@@ -213,25 +223,21 @@ public class ShapesController extends Controller implements Cloneable {
 		//LOGGER.log(Level.FINE, "Translate : x={0}, y={1}", new Object[] { s.getLoc().x, s.getLoc().y });
 		for (Iterator<Shape> it = ((SCollection) this.getModel()).getIterator(); it.hasNext();) {
 			Shape current = it.next();
-			if(((SelectionAttributes) current.getAttributes(SelectionAttributes.ID)).isSelected()){	
-				current.translate(dx,dy);
-			}
+			if (isSelected(current)) current.translate(dx, dy);
 		}
 		getView().repaint();
 	}
 
 	public void deleteSelected(){
-		// TODO : IndexOutOfBoundsException while deleting the last shape
-		// is an empy model allowed ?
-		ArrayList<Shape> toDelet = new ArrayList<Shape>();
+		ArrayList<Shape> toDelete = new ArrayList<Shape>();
 		for (Iterator<Shape> it = ((SCollection) this.getModel()).getIterator(); it.hasNext();) {
 			Shape current = it.next();
 			if(((SelectionAttributes) current.getAttributes(SelectionAttributes.ID)).isSelected()){	
 				this.del_mem.add(current);
-				toDelet.add(current);
+				toDelete.add(current);
 			}
 		}
-		for (Shape current: toDelet){
+		for (Shape current: toDelete){
 			LOGGER.log(Level.INFO, "Removing shape {0}", current);
 			((SCollection)this.getModel()).remove(current);
 		}
@@ -241,7 +247,8 @@ public class ShapesController extends Controller implements Cloneable {
 	public void unselectAll() {
 		for (Iterator<Shape> it = ((SCollection) this.getModel()).getIterator(); it.hasNext();) {
 			Shape current = it.next();
-			((SelectionAttributes) current.getAttributes(SelectionAttributes.ID)).unselect();
+			SelectionAttributes attrs = (SelectionAttributes) current.getAttributes(SelectionAttributes.ID);
+			if (attrs != null) attrs.unselect();
 		}
 		getView().repaint();
 	}
