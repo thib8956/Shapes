@@ -11,6 +11,7 @@ import java.util.logging.Logger;
 import fr.uha.graphics.shapes.SCircle;
 import fr.uha.graphics.shapes.SCollection;
 import fr.uha.graphics.shapes.SRectangle;
+import fr.uha.graphics.shapes.SSelection;
 import fr.uha.graphics.shapes.SText;
 import fr.uha.graphics.shapes.STriangle;
 import fr.uha.graphics.shapes.Shape;
@@ -137,5 +138,27 @@ public class ShapeDraftman implements ShapeVisitor {
 
 	public void setGraphics(Graphics g) {
 		this.graph = (Graphics2D) g;
+	}
+
+	@Override
+	public void visitSelection(SSelection sel) {
+		// LOGGER.log(Level.INFO, "Calling visitRectangle");
+		Rectangle r = sel.getRect();
+		ColorAttributes attrs = (ColorAttributes) sel.getAttributes(ColorAttributes.ID);
+		SelectionAttributes selAttrs = (SelectionAttributes) sel.getAttributes(SelectionAttributes.ID);
+
+		// LOGGER.log(Level.INFO, "ColorAttributes : \n{0}", attrs);
+		if (attrs == null)
+			attrs = DEFAULTCOLORATTRIBUTES;
+		else if (attrs.filled) {
+			this.graph.setColor(attrs.filledColor);
+			this.graph.fillRect(r.x, r.y, r.width, r.height);
+		}
+		if (attrs.stroked) {
+			this.graph.setColor(attrs.strokedColor);
+			this.graph.drawRect(r.x, r.y, r.width, r.height);
+		}
+		if (selAttrs.isSelected()) drawHandler(sel.getBounds());
+		
 	}
 }
