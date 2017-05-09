@@ -8,4 +8,6 @@ public interface ShapeVisitor {
 	public void visitText(SText text);
 
 	public void visitCollection(SCollection col);
+	
+	public void visitSelection(SSelection sel);
 }
