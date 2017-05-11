@@ -10,4 +10,7 @@ public interface ShapeVisitor {
 	public void visitCollection(SCollection col);
 
 	public void visitTriangle(STriangle sTriangle);
+
+	public void visitSelection(SSelection sel);
+
 }
