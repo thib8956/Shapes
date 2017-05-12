@@ -227,7 +227,7 @@ public class ShapesController extends Controller implements Cloneable {
 		for (Iterator<Shape> it = ((SCollection) this.getModel()).getIterator(); it.hasNext();) {
 			Shape current = it.next();
 			if(((SelectionAttributes) current.getAttributes(SelectionAttributes.ID)).isSelected()){	
-
+				this.del_mem.add(current);
 				toDelet.add(current);
 			}
 		}
