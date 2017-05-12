@@ -13,4 +13,5 @@ public interface ShapeVisitor {
 	
 	public void visitSelection(SSelection sel);
 
+
 }

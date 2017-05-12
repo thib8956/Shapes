@@ -62,14 +62,9 @@ public class ShapesController extends Controller implements Cloneable {
 				getView().repaint();
 			}
 
-			SelectionAttributes sattrs = (SelectionAttributes) current.getAttributes(SelectionAttributes.ID);
-			LOGGER.log(Level.INFO, "Shape {0} isSelected : {1}", new Object[] { current, sattrs.isSelected() });
-
-
-
-
 		}
 
+		
 		for (Iterator<Shape> it = ((SCollection) this.getModel()).getIterator(); it.hasNext();) {
 			Shape current = it.next();
 			if(current instanceof SSelection){
@@ -83,18 +78,20 @@ public class ShapesController extends Controller implements Cloneable {
 	@Override
 	public void mouseClicked(MouseEvent e) {
 		super.mouseClicked(e);
-//		this.locClicked = e.getPoint();
-//		Shape s = getTarget();
-//		if (s != null) {
-//			SelectionAttributes sel = (SelectionAttributes) s.getAttributes(SelectionAttributes.ID);
-//			sel.toggleSelection();
-//			if(shiftDown()){
-//				sel.select();
-//			}
-//		} else {
-//			LOGGER.log(Level.INFO, "Point clicked : x={0} y={1}", new Object[] { locClicked.x, locClicked.y });
-//			if (!shiftDown()) unselectAll();
-//		}
+
+		this.locClicked = e.getPoint();
+		Shape s = getTarget();
+		if (s != null) {
+			SelectionAttributes sel = (SelectionAttributes) s.getAttributes(SelectionAttributes.ID);
+			sel.toggleSelection();
+			if(shiftDown()){
+				sel.select();
+			}
+		} else {
+			LOGGER.log(Level.INFO, "Point clicked : x={0} y={1}", new Object[] { locClicked.x, locClicked.y });
+			if (!shiftDown()) unselectAll();
+		}
+
 	}
 
 	@Override
@@ -155,6 +152,7 @@ public class ShapesController extends Controller implements Cloneable {
 			deleteSelected();
 		}
 		else if (evt.getKeyCode() == KeyEvent.VK_Z){
+
 			LOGGER.info("Z pressed: Back");
 			ListIterator<Shape> it = del_mem.listIterator();
 			while(it.hasNext()){
@@ -183,6 +181,7 @@ public class ShapesController extends Controller implements Cloneable {
 			}
 			copy_mem.clear();
 			getView().repaint();
+
 		}
 	}
 
@@ -228,7 +227,7 @@ public class ShapesController extends Controller implements Cloneable {
 		for (Iterator<Shape> it = ((SCollection) this.getModel()).getIterator(); it.hasNext();) {
 			Shape current = it.next();
 			if(((SelectionAttributes) current.getAttributes(SelectionAttributes.ID)).isSelected()){	
-				del_mem.add(current);
+
 				toDelet.add(current);
 			}
 		}
