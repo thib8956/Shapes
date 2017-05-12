@@ -25,8 +25,8 @@ public class ShapeDraftman implements ShapeVisitor {
 	private static final Logger LOGGER = Logger.getLogger(ShapeDraftman.class.getName());
 
 	// Default attributes
-	private static final ColorAttributes DEFAULTCOLORATTRIBUTES = new ColorAttributes(false, true, Color.BLACK,
-			Color.BLACK);
+	// TODO : externalize constants ?
+	private static final ColorAttributes DEFAULT_COLOR_ATTRIBUTES = new ColorAttributes(false, true, Color.BLACK, Color.BLACK);
 
 	private Graphics2D graph;
 
@@ -36,41 +36,39 @@ public class ShapeDraftman implements ShapeVisitor {
 
 	@Override
 	public void visitRectangle(SRectangle rect) {
-
-		// LOGGER.log(Level.INFO, "Calling visitRectangle");
 		Rectangle r = rect.getRect();
-		ColorAttributes attrs = (ColorAttributes) rect.getAttributes(ColorAttributes.ID);
-		SelectionAttributes selAttrs = (SelectionAttributes) rect.getAttributes(SelectionAttributes.ID);
+		ColorAttributes colAttrs = (ColorAttributes) rect.getAttributes(ColorAttributes.ID);
 
-		// LOGGER.log(Level.INFO, "ColorAttributes : \n{0}", attrs);
-		if (attrs == null)
-			attrs = DEFAULTCOLORATTRIBUTES;
-		else if (attrs.filled) {
-			this.graph.setColor(attrs.filledColor);
+		if (colAttrs == null){
+			colAttrs = DEFAULT_COLOR_ATTRIBUTES;
+		}
+		if (colAttrs.filled) {
+			this.graph.setColor(colAttrs.filledColor);
 			this.graph.fillRect(r.x, r.y, r.width, r.height);
 		}
-		if (attrs.stroked) {
-			this.graph.setColor(attrs.strokedColor);
+		if (colAttrs.stroked) {
+			this.graph.setColor(colAttrs.strokedColor);
 			this.graph.drawRect(r.x, r.y, r.width, r.height);
 		}
-		if (selAttrs.isSelected()) drawHandler(rect.getBounds());
+		drawHandlerIfSelected(rect);
 	}
 
 	@Override
 	public void visitCircle(SCircle circle) {
-		ColorAttributes attrs = (ColorAttributes) circle.getAttributes(ColorAttributes.ID);
-		SelectionAttributes selAttrs = (SelectionAttributes) circle.getAttributes(SelectionAttributes.ID);
-		if (attrs == null)
-			attrs = DEFAULTCOLORATTRIBUTES;
-		else if (attrs.filled) {
-			this.graph.setColor(attrs.filledColor);
+		ColorAttributes colAttrs = (ColorAttributes) circle.getAttributes(ColorAttributes.ID);
+		
+		if (colAttrs == null) {
+			colAttrs = DEFAULT_COLOR_ATTRIBUTES;
+		}
+		if (colAttrs.filled) {
+			this.graph.setColor(colAttrs.filledColor);
 			this.graph.fillOval(circle.getLoc().x, circle.getLoc().y, circle.getRadius(), circle.getRadius());
 		}
-		if (attrs.stroked) this.graph.setColor(attrs.strokedColor);
+		if (colAttrs.stroked) this.graph.setColor(colAttrs.strokedColor);
 		this.graph.drawOval(circle.getLoc().x, circle.getLoc().y, circle.getRadius(), circle.getRadius());
 
-		if (selAttrs.isSelected()) drawHandler(circle.getBounds());
-	}
+		drawHandlerIfSelected(circle);
+}
 
 	@Override
 	public void visitText(SText text) {
@@ -78,12 +76,12 @@ public class ShapeDraftman implements ShapeVisitor {
 		Rectangle bounds = text.getBounds();
 		// Fetch SText attributes
 		ColorAttributes colAttrs = (ColorAttributes) text.getAttributes(ColorAttributes.ID);
-		SelectionAttributes selAttrs = (SelectionAttributes) text.getAttributes(SelectionAttributes.ID);
 		FontAttributes fontAttrs = (FontAttributes) text.getAttributes(FontAttributes.ID);
 
-		if (colAttrs == null)
-			colAttrs = DEFAULTCOLORATTRIBUTES;
-		else if (colAttrs.filled) {
+		if (colAttrs == null){
+			colAttrs = DEFAULT_COLOR_ATTRIBUTES;
+		}
+		if (colAttrs.filled) {
 			this.graph.setColor(colAttrs.filledColor);
 			// The reference point for Rectangle is the upper-left corner,
 			// whereas it is the bottom-left corner for Font.drawString().
@@ -93,43 +91,61 @@ public class ShapeDraftman implements ShapeVisitor {
 		this.graph.setPaint(fontAttrs.fontColor);
 		this.graph.drawString(text.getText(), loc.x, loc.y);
 
-		if (selAttrs.isSelected()) drawHandler(text.getBounds());
+		drawHandlerIfSelected(text);
 	}
 
 	@Override
 	public void visitCollection(SCollection col) {
-		boolean colSelected = ((SelectionAttributes) col.getAttributes(SelectionAttributes.ID)).isSelected();
-
 		for (Iterator<Shape> it = col.getIterator(); it.hasNext();) {
 			Shape current = it.next();
 			current.accept(this);
-			// TODO : is it useful to propagate the "selected" attribute to members ?
 		}
-		if (colSelected) drawHandler(col.getBounds());
+		
+		drawHandlerIfSelected(col);
 	}
 
 	public void visitTriangle(STriangle tri){
 		Point loc = tri.getLoc();
 		int size = tri.getSize();
-		ColorAttributes attrs = (ColorAttributes) tri.getAttributes(ColorAttributes.ID);
-		SelectionAttributes selAttrs = (SelectionAttributes) tri.getAttributes(SelectionAttributes.ID);
-		
-		if (attrs == null)
-			attrs = DEFAULTCOLORATTRIBUTES;
-		else if (attrs.filled) {
-			this.graph.setColor(attrs.filledColor);
+		ColorAttributes colAttrs = (ColorAttributes) tri.getAttributes(ColorAttributes.ID);
+
+		if (colAttrs == null){
+			colAttrs = DEFAULT_COLOR_ATTRIBUTES;
+		}
+		if (colAttrs.filled) {
+			this.graph.setColor(colAttrs.filledColor);
 			this.graph.fillPolygon(new int[]{loc.x, loc.x+(size/2), loc.x + size},
 								   new int[]{loc.y+size, loc.y, loc.y+size}, 
 								   3);
 		}
-		if (attrs.stroked) this.graph.setColor(attrs.strokedColor);
+		if (colAttrs.stroked) this.graph.setColor(colAttrs.strokedColor);
 		this.graph.drawPolygon(new int[]{loc.x, loc.x+(size/2), loc.x + size},
 							   new int[]{loc.y+size, loc.y, loc.y+size}, 
 							   3);
 
-		if (selAttrs.isSelected()) drawHandler(tri.getBounds());
+		drawHandlerIfSelected(tri);
 	}
 	
+	@Override
+	public void visitSelection(SSelection sel) {
+		Rectangle r = sel.getRect();
+		ColorAttributes attrs = (ColorAttributes) sel.getAttributes(ColorAttributes.ID);
+	
+		if (attrs == null) attrs = DEFAULT_COLOR_ATTRIBUTES;
+		this.graph.drawRect(r.x, r.y, r.width, r.height);
+	}
+	
+	/*
+	 * Draw handlers on all selected shapes.
+	 */
+	private void drawHandlerIfSelected(Shape s){
+		SelectionAttributes selAttrs = (SelectionAttributes) s.getAttributes(SelectionAttributes.ID);
+		if ((selAttrs != null)&&(selAttrs.isSelected())){
+			Rectangle bounds = s.getBounds();
+			drawHandler(bounds);
+		}
+	}
+
 	public void drawHandler(Rectangle bounds) {
 		this.graph.setColor(Color.RED);
 		this.graph.drawRect(bounds.x - 5, bounds.y - 5, 5, 5);
@@ -138,27 +154,5 @@ public class ShapeDraftman implements ShapeVisitor {
 
 	public void setGraphics(Graphics g) {
 		this.graph = (Graphics2D) g;
-	}
-
-	@Override
-	public void visitSelection(SSelection sel) {
-		// LOGGER.log(Level.INFO, "Calling visitRectangle");
-		Rectangle r = sel.getRect();
-		ColorAttributes attrs = (ColorAttributes) sel.getAttributes(ColorAttributes.ID);
-		SelectionAttributes selAttrs = (SelectionAttributes) sel.getAttributes(SelectionAttributes.ID);
-
-		// LOGGER.log(Level.INFO, "ColorAttributes : \n{0}", attrs);
-		if (attrs == null)
-			attrs = DEFAULTCOLORATTRIBUTES;
-		else if (attrs.filled) {
-			this.graph.setColor(attrs.filledColor);
-			this.graph.fillRect(r.x, r.y, r.width, r.height);
-		}
-		if (attrs.stroked) {
-			this.graph.setColor(attrs.strokedColor);
-			this.graph.drawRect(r.x, r.y, r.width, r.height);
-		}
-		if (selAttrs.isSelected()) drawHandler(sel.getBounds());
-		
 	}
 }
