@@ -14,6 +14,7 @@ import javax.swing.JFrame;
 import fr.uha.graphics.shapes.SCircle;
 import fr.uha.graphics.shapes.SCollection;
 import fr.uha.graphics.shapes.SRectangle;
+import fr.uha.graphics.shapes.SSelection;
 import fr.uha.graphics.shapes.SText;
 import fr.uha.graphics.shapes.STriangle;
 import fr.uha.graphics.shapes.attributes.ColorAttributes;
@@ -26,7 +27,7 @@ public class Editor extends JFrame {
 	private static final Dimension WIN_SIZE = new Dimension(400, 300);
 
 	private ShapesView sview;
-	private SCollection model;
+	protected static SCollection model;
 
 	public Editor() {
 		super("Shapes Editor");
@@ -60,7 +61,12 @@ public class Editor extends JFrame {
 	private void buildModel() {
 		this.model = new SCollection();
 		this.model.addAttributes(new SelectionAttributes());
-
+		
+		SSelection sel=new SSelection(new Point (0,0),0,0);
+		sel.addAttributes(new ColorAttributes(false, true, Color.BLACK, Color.BLACK));
+		sel.addAttributes(new SelectionAttributes());
+		this.model.add(sel);
+		
 		SRectangle r = new SRectangle(new Point(10, 10), 40, 60);
 		r.addAttributes(new ColorAttributes(true, true, Color.BLUE, Color.BLACK));
 		r.addAttributes(new SelectionAttributes());
