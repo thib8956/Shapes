@@ -7,7 +7,7 @@ import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
 
 public class Controller implements MouseListener, MouseMotionListener, KeyListener {
-	private Object model;
+	protected Object model;
 	private View view;
 
 	public Controller(Object newModel) {
@@ -69,4 +69,5 @@ public class Controller implements MouseListener, MouseMotionListener, KeyListen
 	@Override
 	public void keyReleased(KeyEvent evt) {
 	}
+	
 }

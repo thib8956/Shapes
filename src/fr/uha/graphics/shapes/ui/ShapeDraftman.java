@@ -104,14 +104,16 @@ public class ShapeDraftman implements ShapeVisitor {
 		drawHandlerIfSelected(col);
 	}
 
+	// TODO : refactor visitTriangle
 	public void visitTriangle(STriangle tri){
 		Point loc = tri.getLoc();
 		int size = tri.getSize();
 		ColorAttributes colAttrs = (ColorAttributes) tri.getAttributes(ColorAttributes.ID);
-		
-		if (colAttrs == null)
+
+		if (colAttrs == null){
 			colAttrs = DEFAULT_COLOR_ATTRIBUTES;
-		else if (colAttrs.filled) {
+		}
+		if (colAttrs.filled) {
 			this.graph.setColor(colAttrs.filledColor);
 			this.graph.fillPolygon(new int[]{loc.x, loc.x+(size/2), loc.x + size},
 								   new int[]{loc.y+size, loc.y, loc.y+size}, 

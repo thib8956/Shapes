@@ -12,5 +12,4 @@ public interface ShapeVisitor {
 	public void visitTriangle(STriangle sTriangle);
 
 	public void visitSelection(SSelection sel);
-
 }

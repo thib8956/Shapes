@@ -5,6 +5,10 @@ import java.awt.Rectangle;
 
 public class SSelection extends SRectangle {
 
+	public SSelection(){
+		super(new Point(0, 0), 0, 0);
+	}
+
 	public SSelection(Point loc, int width, int length) {
 		super(loc, width, length);
 	}
