@@ -60,17 +60,18 @@ public class ShapesController extends Controller implements Cloneable {
 	public void mouseClicked(MouseEvent e) {
 		super.mouseClicked(e);
 
-		this.locClicked = e.getPoint();
-		Shape s = getTarget();
-		if (s != null) {
-			SelectionAttributes sel = (SelectionAttributes) s.getAttributes(SelectionAttributes.ID);
-			sel.toggleSelection();
-			if(shiftDown()){
-				sel.select();
-			}
-		} else {
-			LOGGER.log(Level.INFO, "Point clicked : x={0} y={1}", new Object[] { locClicked.x, locClicked.y });
-			if (!shiftDown()) unselectAll();
+//		this.locClicked = e.getPoint();
+//		Shape s = getTarget();
+//		if (s != null) {
+//			SelectionAttributes sel = (SelectionAttributes) s.getAttributes(SelectionAttributes.ID);
+//			sel.toggleSelection();
+//			if(shiftDown()){
+//				sel.select();
+//			}
+//		} else {
+//			LOGGER.log(Level.INFO, "Point clicked : x={0} y={1}", new Object[] { locClicked.x, locClicked.y });
+//			if (!shiftDown()) unselectAll();
+//		}
 	}
 
 	@Override
@@ -176,7 +177,7 @@ public class ShapesController extends Controller implements Cloneable {
 			LOGGER.info("C pressed: Copy");
 			for (Iterator<Shape> it = ((SCollection) this.getModel()).getIterator(); it.hasNext();) {
 				Shape current = it.next();
-				if(((SelectionAttributes) current.getAttributes(SelectionAttributes.ID)).isSelected()){	
+				if(isSelected(current)){	
 					copy_mem.add(current);
 				}
 			}
@@ -232,7 +233,7 @@ public class ShapesController extends Controller implements Cloneable {
 		ArrayList<Shape> toDelete = new ArrayList<Shape>();
 		for (Iterator<Shape> it = ((SCollection) this.getModel()).getIterator(); it.hasNext();) {
 			Shape current = it.next();
-			if(((SelectionAttributes) current.getAttributes(SelectionAttributes.ID)).isSelected()){	
+			if(isSelected(current)){	
 				this.del_mem.add(current);
 				toDelete.add(current);
 			}
