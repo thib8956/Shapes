@@ -27,7 +27,7 @@ public class Editor extends JFrame {
 	private static final Dimension WIN_SIZE = new Dimension(400, 300);
 
 	private ShapesView sview;
-	private SCollection model;
+	protected static SCollection model;
 
 	public Editor() {
 		super("Shapes Editor");

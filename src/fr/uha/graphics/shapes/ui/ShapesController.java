@@ -5,6 +5,8 @@ import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.List;
+import java.util.ListIterator;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -14,12 +16,14 @@ import fr.uha.graphics.shapes.Shape;
 import fr.uha.graphics.shapes.attributes.SelectionAttributes;
 import fr.uha.graphics.ui.Controller;
 
-public class ShapesController extends Controller {
+public class ShapesController extends Controller implements Cloneable {
 
 	private static final Logger LOGGER = Logger.getLogger(ShapesController.class.getName());
 	private boolean shiftDown;
 	private Point locClicked;
 	private SSelection sel = new SSelection(new Point (0,0),0,0);
+	List<Shape> copy_mem = new ArrayList<Shape>();
+	List<Shape> del_mem = new ArrayList<Shape>();
 
 	public ShapesController(Shape model) {
 		super(model);
@@ -52,20 +56,20 @@ public class ShapesController extends Controller {
 		for (Iterator<Shape> it = ((SCollection) this.getModel()).getIterator(); it.hasNext();) {
 			Shape current = it.next();
 			LOGGER.log(Level.INFO, "Selector size: {0}",new Object[] { sel.getBounds()});
-			
+
 			if (sel.getBounds().contains(current.getLoc())) {
 				((SelectionAttributes) current.getAttributes(SelectionAttributes.ID)).select();
 				getView().repaint();
 			}
-			
+
 			SelectionAttributes sattrs = (SelectionAttributes) current.getAttributes(SelectionAttributes.ID);
 			LOGGER.log(Level.INFO, "Shape {0} isSelected : {1}", new Object[] { current, sattrs.isSelected() });
-			
-			
 
-			
+
+
+
 		}
-		
+
 		for (Iterator<Shape> it = ((SCollection) this.getModel()).getIterator(); it.hasNext();) {
 			Shape current = it.next();
 			if(current instanceof SSelection){
@@ -79,18 +83,18 @@ public class ShapesController extends Controller {
 	@Override
 	public void mouseClicked(MouseEvent e) {
 		super.mouseClicked(e);
-		this.locClicked = e.getPoint();
-		Shape s = getTarget();
-		if (s != null) {
-			SelectionAttributes sel = (SelectionAttributes) s.getAttributes(SelectionAttributes.ID);
-			sel.toggleSelection();
-			if(shiftDown()){
-				sel.select();
-			}
-		} else {
-			LOGGER.log(Level.INFO, "Point clicked : x={0} y={1}", new Object[] { locClicked.x, locClicked.y });
-			if (!shiftDown()) unselectAll();
-		}
+//		this.locClicked = e.getPoint();
+//		Shape s = getTarget();
+//		if (s != null) {
+//			SelectionAttributes sel = (SelectionAttributes) s.getAttributes(SelectionAttributes.ID);
+//			sel.toggleSelection();
+//			if(shiftDown()){
+//				sel.select();
+//			}
+//		} else {
+//			LOGGER.log(Level.INFO, "Point clicked : x={0} y={1}", new Object[] { locClicked.x, locClicked.y });
+//			if (!shiftDown()) unselectAll();
+//		}
 	}
 
 	@Override
@@ -151,13 +155,34 @@ public class ShapesController extends Controller {
 			deleteSelected();
 		}
 		else if (evt.getKeyCode() == KeyEvent.VK_Z){
-				 LOGGER.info("Z pressed: Back");
+			LOGGER.info("Z pressed: Back");
+			ListIterator<Shape> it = del_mem.listIterator();
+			while(it.hasNext()){
+				Shape str = it.next();
+				Editor.model.add(str);
+			}
+			del_mem.clear();
+			getView().repaint();
+
 		}
 		else if (evt.getKeyCode() == KeyEvent.VK_C){
 			LOGGER.info("C pressed: Copy");
+			for (Iterator<Shape> it = ((SCollection) this.getModel()).getIterator(); it.hasNext();) {
+				Shape current = it.next();
+				if(((SelectionAttributes) current.getAttributes(SelectionAttributes.ID)).isSelected()){	
+					copy_mem.add(current);
+				}
+			}
 		}
 		else if (evt.getKeyCode() == KeyEvent.VK_V){
 			LOGGER.info("V pressed: Paste");
+			ListIterator<Shape> it = copy_mem.listIterator();
+			while(it.hasNext()){
+				Shape str = it.next();
+				Editor.model.add(str);
+			}
+			copy_mem.clear();
+			getView().repaint();
 		}
 	}
 
@@ -203,6 +228,7 @@ public class ShapesController extends Controller {
 		for (Iterator<Shape> it = ((SCollection) this.getModel()).getIterator(); it.hasNext();) {
 			Shape current = it.next();
 			if(((SelectionAttributes) current.getAttributes(SelectionAttributes.ID)).isSelected()){	
+				del_mem.add(current);
 				toDelet.add(current);
 			}
 		}
@@ -224,5 +250,7 @@ public class ShapesController extends Controller {
 	public boolean shiftDown() {
 		return this.shiftDown;
 	}
+
+
 
 }
