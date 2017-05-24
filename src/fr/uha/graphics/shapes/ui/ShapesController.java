@@ -1,8 +1,13 @@
 package fr.uha.graphics.shapes.ui;
 
 import java.awt.Point;
+import java.io.PrintWriter;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -204,6 +209,9 @@ public class ShapesController extends Controller implements Cloneable {
 		} else if ((evt.getKeyCode() == KeyEvent.VK_DELETE)){
 			LOGGER.info("Delete released");
 			deleteSelected();
+		}else if ((evt.getKeyCode() == KeyEvent.VK_H)){
+			LOGGER.info("HTML/CSS generated");
+			htmlGenerator();
 		}
 	}
 
@@ -252,6 +260,48 @@ public class ShapesController extends Controller implements Cloneable {
 			if (attrs != null) attrs.unselect();
 		}
 		getView().repaint();
+	}
+	
+	public void htmlGenerator(){
+		try {
+			//BufferedWriter index = new BufferedWriter(new FileWriter(new File("index.html")));
+			//BufferedWriter style = new BufferedWriter(new FileWriter(new File("style.css")));
+			PrintWriter index = new PrintWriter("index.html", "UTF-8");
+			PrintWriter style = new PrintWriter("style.css", "UTF-8");
+			
+			index.println("<!DOCTYPE htm>");
+			index.println("<html lang=\"fr\">");
+			index.println("<head>");
+			index.println("<meta http-equiv=\"Content-Type\" content=\"text/html; charset=UTF-8\" />");
+			index.println("<link rel=\"stylesheet\" href=\"style.css\" />");
+			index.println("<title>TP Shape COLICCHIO et GASSER</title>");
+			index.println("</head>");
+			index.println("<body>");
+			
+			for (Iterator<Shape> it = ((SCollection) this.getModel()).getIterator(); it.hasNext();) {
+				Shape current = it.next();
+				index.println(current.htmlShape());				
+			}
+			index.flush();
+			index.println("<footer>");
+			index.println("<p> 2017 Crée par Alexandre COLICCHIO et Thibaud GASSER - Site généré automatiquement dans le cadre de notre TP Shape </p>");
+			index.println("</footer>");
+			index.println("</body>");
+			index.println("</html>");
+			index.close();
+			style.println("footer{text-align:center;margin:auto;height:50px;position:fixed;bottom:0;font-weight:bold;}");
+			
+			for (Iterator<Shape> it = ((SCollection) this.getModel()).getIterator(); it.hasNext();) {
+				Shape current = it.next();
+				style.println(current.cssShape());
+			}
+			style.close();
+			
+			
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 
 	public boolean shiftDown() {

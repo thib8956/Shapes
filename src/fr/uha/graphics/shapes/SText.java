@@ -52,4 +52,17 @@ public class SText extends Shape {
 		sv.visitText(this);
 	}
 
+	@Override
+	public String htmlShape() {
+		// TODO Auto-generated method stub
+		return "<div class=\"texte"+this.hashCode()+"\">"+getText()+"</div>";
+	}
+
+	@Override
+	public String cssShape() {
+		// TODO Auto-generated method stub
+		Rectangle rect = getBounds();
+		return ".texte"+this.hashCode()+"{position:absolute;top:"+getLoc().getY()+";left:"+getLoc().getX()+";width:"+rect.width+"px;height:"+rect.height+"px;"+this.attributesCss()+"}";
+	}
+
 }

@@ -53,4 +53,16 @@ public class SCircle extends Shape {
 		return "SCircle [radius=" + radius + ", loc=" + loc + "]";
 	}
 
+	@Override
+	public String htmlShape() {
+		// TODO Auto-generated method stub
+		return "<div class=\"circle"+this.hashCode()+"\"></div>";
+	}
+
+	@Override
+	public String cssShape() {
+		// TODO Auto-generated method stub
+		return ".circle"+this.hashCode()+"{position:absolute;top:"+getLoc().getY()+";left:"+getLoc().getX()+";width:"+radius+"px;height:"+radius+"px;-webkit-border-radius:"+radius/2+"px;-moz-border-radius:"+radius/2+"px;-o-border-radius:"+radius/2+"px;border-radius:"+radius/2+"px;"+this.attributesCss()+"}";
+	}
+
 }
