@@ -23,24 +23,19 @@ public abstract class Shape {
 	public String attributesCss(){
 		
 		ColorAttributes colAttrs = (ColorAttributes) this.getAttributes(ColorAttributes.ID);
-		String strokedColor="("+colAttrs.strokedColor.getRed()+","+colAttrs.strokedColor.getGreen()+","+colAttrs.strokedColor.getBlue()+")";
-		String filledColor="("+colAttrs.filledColor.getRed()+","+colAttrs.filledColor.getGreen()+","+colAttrs.filledColor.getBlue()+")";
+		String filledColor = String.format("#%02x%02x%02x", colAttrs.filledColor.getRed(), colAttrs.filledColor.getGreen(), colAttrs.filledColor.getBlue());  
+		String strokedColor = String.format("#%02x%02x%02x", colAttrs.strokedColor.getRed(), colAttrs.strokedColor.getGreen(), colAttrs.strokedColor.getBlue());
 
 		if(colAttrs.stroked && colAttrs.filled){
-			return "background:rgb"+filledColor+";border:1px solid rgb"+strokedColor+";";
+			return "background: " + filledColor + ";border:1px solid " + strokedColor + ";";
 		}
 		if (colAttrs.stroked){
-			//System.out.println(strokedColor);
-			return "background:#fff;border:1px solid rgb"+strokedColor+";";
+			return "background:#ffffff;border:1px solid "+strokedColor+";";
 		}
 		if (colAttrs.filled) {
-			//System.out.println(filledColor);
-			return "background:rgb"+filledColor+";";
+			return "background: "+filledColor+";";
 		}
 		return null;
-
-		
-		
 	}
 
 	public abstract void translate(int dx, int dy);

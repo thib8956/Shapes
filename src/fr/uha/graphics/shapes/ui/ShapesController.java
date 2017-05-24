@@ -127,13 +127,27 @@ public class ShapesController extends Controller {
 			break;
 		case KeyEvent.VK_H:
 			LOGGER.info("HTML/CSS generated");
-			htmlGenerator();
+			try {
+				generateHtml();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
 			break;
 		default:
 			break;
 		}
 	}
 
+	@Override
+	public void keyReleased(KeyEvent evt) {
+		super.keyReleased(evt);
+		switch (evt.getKeyCode()) {
+		case KeyEvent.VK_SHIFT:
+			shiftDown = false;
+			break;
+		}
+	}
+	
 	public Shape getTarget() {
 		SCollection model = (SCollection) getModel();
 		Iterator<Shape> it = model.getIterator();
@@ -179,45 +193,38 @@ public class ShapesController extends Controller {
 		getView().repaint();
 	}
 
-	public void htmlGenerator(){
-		try {
-			//BufferedWriter index = new BufferedWriter(new FileWriter(new File("index.html")));
-			//BufferedWriter style = new BufferedWriter(new FileWriter(new File("style.css")));
-			PrintWriter index = new PrintWriter("index.html", "UTF-8");
-			PrintWriter style = new PrintWriter("style.css", "UTF-8");
+	public void generateHtml() throws IOException {
+		PrintWriter index = new PrintWriter("index.html", "UTF-8");
+		PrintWriter style = new PrintWriter("style.css", "UTF-8");
 
-			index.println("<!DOCTYPE htm>");
-			index.println("<html lang=\"fr\">");
-			index.println("<head>");
-			index.println("<meta http-equiv=\"Content-Type\" content=\"text/html; charset=UTF-8\" />");
-			index.println("<link rel=\"stylesheet\" href=\"style.css\" />");
-			index.println("<title>TP Shape COLICCHIO et GASSER</title>");
-			index.println("</head>");
-			index.println("<body>");
+		index.println("<!DOCTYPE htm>");
+		index.println("<html lang=\"fr\">");
+		index.println("<head>");
+		index.println("<meta http-equiv=\"Content-Type\" content=\"text/html; charset=UTF-8\" />");
+		index.println("<link rel=\"stylesheet\" href=\"style.css\" />");
+		index.println("<title>TP Shape COLICCHIO et GASSER</title>");
+		index.println("</head>");
+		index.println("<body>");
 
-			for (Iterator<Shape> it = ((SCollection) this.getModel()).getIterator(); it.hasNext();) {
-				Shape current = it.next();
-				index.println(current.htmlShape());
-			}
-			index.flush();
-			index.println("<footer>");
-			index.println("<p> 2017 Crée par Alexandre COLICCHIO et Thibaud GASSER - Site généré automatiquement dans le cadre de notre TP Shape </p>");
-			index.println("</footer>");
-			index.println("</body>");
-			index.println("</html>");
-			index.close();
-			style.println("footer{text-align:center;margin:auto;height:50px;position:fixed;bottom:0;font-weight:bold;}");
-
-			for (Iterator<Shape> it = ((SCollection) this.getModel()).getIterator(); it.hasNext();) {
-				Shape current = it.next();
-				style.println(current.cssShape());
-			}
-			style.close();
-
-
-		} catch (IOException e) {
-			e.printStackTrace();
+		for (Iterator<Shape> it = ((SCollection) this.getModel()).getIterator(); it.hasNext();) {
+			Shape current = it.next();
+			index.println(current.htmlShape());
 		}
+		index.flush();
+		index.println("<footer>");
+		index.println("<p> 2017 Crée par Alexandre COLICCHIO et Thibaud GASSER - Site généré automatiquement dans le cadre de notre TP Shape </p>");
+		index.println("</footer>");
+		index.println("</body>");
+		index.println("</html>");
+		index.close();
+		
+		style.println("footer{text-align:center;margin:auto;height:50px;position:fixed;bottom:0;font-weight:bold;}");
+		
+		for (Iterator<Shape> it = ((SCollection) this.getModel()).getIterator(); it.hasNext();) {
+			Shape current = it.next();
+			style.println(current.cssShape());
+		}
+		style.close();
 	}
 
 	public boolean shiftDown() {

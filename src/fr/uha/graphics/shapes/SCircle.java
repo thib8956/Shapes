@@ -2,6 +2,9 @@ package fr.uha.graphics.shapes;
 
 import java.awt.Point;
 import java.awt.Rectangle;
+import java.util.logging.Logger;
+
+import fr.uha.graphics.shapes.ui.ShapesController;
 
 public class SCircle extends Shape {
 
@@ -55,14 +58,24 @@ public class SCircle extends Shape {
 
 	@Override
 	public String htmlShape() {
-		// TODO Auto-generated method stub
 		return "<div class=\"circle"+this.hashCode()+"\"></div>";
 	}
 
 	@Override
 	public String cssShape() {
-		// TODO Auto-generated method stub
-		return ".circle"+this.hashCode()+"{position:absolute;top:"+getLoc().getY()+";left:"+getLoc().getX()+";width:"+radius+"px;height:"+radius+"px;-webkit-border-radius:"+radius/2+"px;-moz-border-radius:"+radius/2+"px;-o-border-radius:"+radius/2+"px;border-radius:"+radius/2+"px;"+this.attributesCss()+"}";
+		StringBuilder strBuilder = new StringBuilder(".circle" + this.hashCode() + "{ ");
+		strBuilder.append("position: absolute;");
+		strBuilder.append("top:" + this.loc.y + "px;");
+		strBuilder.append("left:" + this.loc.x + "px;");
+		strBuilder.append("width:" + this.radius + "px;");
+		strBuilder.append("height:" + this.radius + "px;");
+		strBuilder.append("border-radius:" + this.radius/2 + "px;");
+		strBuilder.append("-webkit-border-radius:" + this.radius/2 + "px;");
+		strBuilder.append("-o-border-radius:" + this.radius/2 + "px;");
+		strBuilder.append("-moz-border-radius:" + this.radius/2 + "px;");
+		strBuilder.append(this.attributesCss());
+		strBuilder.append(" }");
+		return strBuilder.toString();
 	}
 
 }

@@ -66,27 +66,21 @@ public class SCollection extends Shape {
 
 	@Override
 	public String htmlShape() {
-		// TODO Auto-generated method stub
-		StringBuffer prepare= new StringBuffer();
+		StringBuilder prepare= new StringBuilder();
 		for(Iterator<Shape> it=childShapes.iterator();it.hasNext();){		
 			Shape current = it.next();
 			prepare.append(current.htmlShape());
-//			System.out.println(current.htmlShape());
 		}
-//		System.out.println(prepare);
 		return prepare.toString();
 	}
 
 	@Override
 	public String cssShape() {
-		// TODO Auto-generated method stub
-		StringBuffer prepare= new StringBuffer();
+		StringBuilder prepare= new StringBuilder();
 		for(Iterator<Shape> it=childShapes.iterator();it.hasNext();){			
 			Shape current = it.next();
 			prepare.append(current.cssShape());
-//			System.out.println(current.cssShape());
 		}
-//		System.out.println(prepare);
 		return prepare.toString();
 	}
 

@@ -1,10 +1,13 @@
 package fr.uha.graphics.shapes;
 
 import java.awt.Canvas;
+import java.awt.Color;
+import java.awt.Font;
 import java.awt.FontMetrics;
 import java.awt.Point;
 import java.awt.Rectangle;
 
+import fr.uha.graphics.shapes.attributes.ColorAttributes;
 import fr.uha.graphics.shapes.attributes.FontAttributes;
 
 public class SText extends Shape {
@@ -54,15 +57,33 @@ public class SText extends Shape {
 
 	@Override
 	public String htmlShape() {
-		// TODO Auto-generated method stub
-		return "<div class=\"texte"+this.hashCode()+"\">"+getText()+"</div>";
+		return "<div class=\"text"+this.hashCode()+"\">"+getText()+"</div>";
 	}
 
 	@Override
 	public String cssShape() {
-		// TODO Auto-generated method stub
-		Rectangle rect = getBounds();
-		return ".texte"+this.hashCode()+"{position:absolute;top:"+getLoc().getY()+";left:"+getLoc().getX()+";width:"+rect.width+"px;height:"+rect.height+"px;"+this.attributesCss()+"}";
+		Rectangle bounds = this.getBounds();
+		FontAttributes fontAttrs = (FontAttributes) this.getAttributes(FontAttributes.ID);
+		String hexFontColor = String.format("#%02x%02x%02x", 
+											fontAttrs.fontColor.getRed(), 
+											fontAttrs.fontColor.getGreen(), 
+											fontAttrs.fontColor.getBlue());
+		Font font = fontAttrs.font;
+		
+		StringBuilder strBuilder = new StringBuilder(".text" + this.hashCode() + "{ ");
+		strBuilder.append("position: absolute;");
+		strBuilder.append("top: " + this.loc.y + "px;");
+		strBuilder.append("left: " + this.loc.x + "px;");
+		strBuilder.append("width: " + bounds.width + "px;");
+		strBuilder.append("height: " + bounds.height + "px;");
+		strBuilder.append("font-family: \"" + font.getName() + "\";");
+		strBuilder.append("font-size: " + font.getSize() + "px;");
+		strBuilder.append("color: " + hexFontColor +";");
+		if (font.isBold()) strBuilder.append("font-weight: bold;");
+		if (font.isItalic()) strBuilder.append("font-style: italic;");
+		strBuilder.append(this.attributesCss());
+		strBuilder.append(" }");
+		return strBuilder.toString();
 	}
 
 }

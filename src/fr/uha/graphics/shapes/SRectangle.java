@@ -49,16 +49,18 @@ public class SRectangle extends Shape {
 
 	@Override
 	public String htmlShape() {
-		// TODO Auto-generated method stub
 		return "<div class=\"rectangle"+this.hashCode()+"\"></div>";
 	}
 
 	@Override
 	public String cssShape() {
-		// TODO Auto-generated method stub
-		//this.getAttributes(ColorAttributes.ID);
-		ColorAttributes colAttrs = (ColorAttributes) this.getAttributes(ColorAttributes.ID);
-		//System.out.println(colAttrs);
-		return ".rectangle"+this.hashCode()+"{position:absolute;top:"+getLoc().getY()+";left:"+getLoc().getX()+";width:"+rect.width+"px;height:"+rect.height+"px;"+this.attributesCss()+"}";
+		StringBuilder strBuilder = new StringBuilder(".rectangle" + this.hashCode() + "{ ");
+		strBuilder.append("position:absolute;");
+		strBuilder.append("top:" + this.getLoc().y + "px;");
+		strBuilder.append("left:" + this.getLoc().x + "px;");
+		strBuilder.append("width:" + this.rect.width + "px;");
+		strBuilder.append("height:" + this.rect.height + "px;");
+		strBuilder.append(this.attributesCss() + " }");
+		return strBuilder.toString();
 	}
 }

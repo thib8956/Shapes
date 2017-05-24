@@ -87,6 +87,10 @@ public class ShapeDraftman implements ShapeVisitor {
 			// whereas it is the bottom-left corner for Font.drawString().
 			this.graph.fillRect(loc.x, loc.y - bounds.height, bounds.width, bounds.height);
 		}
+		if (colAttrs.stroked){
+			this.graph.setColor(colAttrs.strokedColor);
+			this.graph.drawRect(loc.x, loc.y - bounds.height, bounds.width, bounds.height);
+		}
 		this.graph.setFont(fontAttrs.font);
 		this.graph.setPaint(fontAttrs.fontColor);
 		this.graph.drawString(text.getText(), loc.x, loc.y);
