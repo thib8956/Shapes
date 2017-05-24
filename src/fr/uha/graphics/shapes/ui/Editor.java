@@ -184,6 +184,7 @@ public class Editor extends JFrame {
 		aboutItem.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
+				//TODO: about message
 				JOptionPane.showMessageDialog(null, "Lorem ipsum dolor sit amet", "About this project",
 						JOptionPane.INFORMATION_MESSAGE);
 			}
