@@ -31,8 +31,4 @@ public class FontAttributes extends Attributes {
 		return ID;
 	}
 
-	public Rectangle getBounds(String bounds) {
-		return null;
-	}
-
 }

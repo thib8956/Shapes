@@ -1,13 +1,10 @@
 package fr.uha.graphics.shapes.ui;
 
 import java.awt.Point;
-import java.io.PrintWriter;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileWriter;
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -204,7 +201,7 @@ public class ShapesController extends Controller {
 			}
 			index.flush();
 			index.println("<footer>");
-			index.println("<p> 2017 Crée par Alexandre COLICCHIO et Thibaud GASSER - Site généré automatiquement dans le cadre de notre TP Shape </p>");
+			index.println("<p> 2017 CrÃ©e par Alexandre COLICCHIO et Thibaud GASSER - Site gÃ©nÃ©rÃ© automatiquement dans le cadre de notre TP Shape </p>");
 			index.println("</footer>");
 			index.println("</body>");
 			index.println("</html>");
@@ -219,7 +216,6 @@ public class ShapesController extends Controller {
 
 
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}

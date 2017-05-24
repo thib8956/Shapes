@@ -15,7 +15,10 @@ import fr.uha.graphics.shapes.SCircle;
 import fr.uha.graphics.shapes.SCollection;
 import fr.uha.graphics.shapes.SRectangle;
 import fr.uha.graphics.shapes.SSelection;
+import fr.uha.graphics.shapes.SText;
+import fr.uha.graphics.shapes.STriangle;
 import fr.uha.graphics.shapes.attributes.ColorAttributes;
+import fr.uha.graphics.shapes.attributes.FontAttributes;
 import fr.uha.graphics.shapes.attributes.SelectionAttributes;
 
 public class Editor extends JFrame {
@@ -101,8 +104,6 @@ public class Editor extends JFrame {
 
 	public static void main(String[] args) {
 		Editor.initLogger();
-		//ShapesController.htmlGenerator();
-
 		Editor self = new Editor();
 		self.pack();
 		self.sview.requestFocusInWindow();
