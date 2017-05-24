@@ -130,7 +130,7 @@ public class ShapesController extends Controller {
 			try {
 				generateHtml();
 			} catch (IOException e) {
-				e.printStackTrace();
+				LOGGER.log(Level.SEVERE, e.getMessage());
 			}
 			break;
 		default:
@@ -147,7 +147,7 @@ public class ShapesController extends Controller {
 			break;
 		}
 	}
-	
+
 	public Shape getTarget() {
 		SCollection model = (SCollection) getModel();
 		Iterator<Shape> it = model.getIterator();
@@ -217,9 +217,9 @@ public class ShapesController extends Controller {
 		index.println("</body>");
 		index.println("</html>");
 		index.close();
-		
+
 		style.println("footer{text-align:center;margin:auto;height:50px;position:fixed;bottom:0;font-weight:bold;}");
-		
+
 		for (Iterator<Shape> it = ((SCollection) this.getModel()).getIterator(); it.hasNext();) {
 			Shape current = it.next();
 			style.println(current.cssShape());
@@ -262,7 +262,7 @@ public class ShapesController extends Controller {
 		return 0;
 	}
 
-	private void undo(){
+	public void undo(){
 		ListIterator<Shape> it = delMem.listIterator();
 		while(it.hasNext()){
 			Shape str = it.next();
@@ -287,7 +287,8 @@ public class ShapesController extends Controller {
 			Shape str = it.next();
 			((SCollection) getModel()).add(str);
 		}
-		copyMem.clear();
+
+		delMem.clear();
 		getView().repaint();
 	}
 }
