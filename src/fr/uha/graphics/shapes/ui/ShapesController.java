@@ -3,6 +3,8 @@ package fr.uha.graphics.shapes.ui;
 import java.awt.Point;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
+import java.io.IOException;
+import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -16,14 +18,14 @@ import fr.uha.graphics.shapes.Shape;
 import fr.uha.graphics.shapes.attributes.SelectionAttributes;
 import fr.uha.graphics.ui.Controller;
 
-public class ShapesController extends Controller implements Cloneable {
+public class ShapesController extends Controller {
 
 	private static final Logger LOGGER = Logger.getLogger(ShapesController.class.getName());
 	private boolean shiftDown;
 	private Point locClicked;
 	private SSelection sel;
-	List<Shape> copy_mem = new ArrayList<Shape>();
-	List<Shape> del_mem = new ArrayList<Shape>();
+	private List<Shape> copyMem = new ArrayList<Shape>();
+	private List<Shape> delMem = new ArrayList<Shape>();
 
 
 	public ShapesController(Shape model) {
@@ -44,10 +46,10 @@ public class ShapesController extends Controller implements Cloneable {
 		super.mousePressed(e);
 		this.locClicked = e.getPoint();
 		Shape target = getTarget();
-		
+
 		if (!shiftDown()){
 			unselectAll();
-		} 
+		}
 
 		if (target != null){
 			SelectionAttributes selAttrs = (SelectionAttributes) target.getAttributes(SelectionAttributes.ID);
@@ -61,19 +63,6 @@ public class ShapesController extends Controller implements Cloneable {
 	@Override
 	public void mouseClicked(MouseEvent e) {
 		super.mouseClicked(e);
-
-//		this.locClicked = e.getPoint();
-//		Shape s = getTarget();
-//		if (s != null) {
-//			SelectionAttributes sel = (SelectionAttributes) s.getAttributes(SelectionAttributes.ID);
-//			sel.toggleSelection();
-//			if(shiftDown()){
-//				sel.select();
-//			}
-//		} else {
-//			LOGGER.log(Level.INFO, "Point clicked : x={0} y={1}", new Object[] { locClicked.x, locClicked.y });
-//			if (!shiftDown()) unselectAll();
-//		}
 	}
 
 	@Override
@@ -81,12 +70,8 @@ public class ShapesController extends Controller implements Cloneable {
 		SSelection currentSSelection = this.sel;
 		for (Iterator<Shape> it = ((SCollection) this.getModel()).getIterator(); it.hasNext();) {
 			Shape current = it.next();
-//			SelectionAttributes attrs = (SelectionAttributes) current.getAttributes(SelectionAttributes.ID);
-//			LOGGER.log(Level.INFO, "Selector size: {0}", new Object[] {sel.getBounds()});
-//			LOGGER.log(Level.INFO, "Current : {0}, loc : {1}", new Object[]{current, loc.toString()});
-			
+
 			if (this.sel.getBounds().contains(current.getBounds())) {
-//				if (attrs != null) attrs.select();
 				select(current);
 				getView().repaint();
 			}
@@ -96,17 +81,13 @@ public class ShapesController extends Controller implements Cloneable {
 		currentSSelection.resize(0, 0);
 		this.sel = currentSSelection;
 		getView().repaint();
-//		for (Iterator<Shape> it = ((SCollection) this.getModel()).getIterator(); it.hasNext();) {
-//			Shape current = it.next();
-//			
-//		}
 	}
 
 	@Override
 	public void mouseDragged(MouseEvent evt) {
 		super.mouseDragged(evt);
-		boolean anyShapeSelected = isShapeSel();
-		
+		boolean anyShapeSelected = isAnyShapeSelected();
+
 		for (Iterator<Shape> it = ((SCollection) this.getModel()).getIterator(); it.hasNext();) {
 			Shape current = it.next();
 
@@ -117,93 +98,53 @@ public class ShapesController extends Controller implements Cloneable {
 				getView().repaint();
 			}
 			// Translate all selected shapes.
-			if(isSelected(current)){	
+			if(isSelected(current)){
 				int dx = evt.getPoint().x - current.getLoc().x;
 				int dy = evt.getPoint().y - current.getLoc().y;
 				translateSelected(dx, dy);
 			}
 		}
 	}
-	
-	@Deprecated
-	private boolean isShapeSel(){
-		for (Iterator<Shape> it = ((SCollection) this.getModel()).getIterator(); it.hasNext();) {
-			Shape current = it.next();
-			SelectionAttributes attrs = (SelectionAttributes) current.getAttributes(SelectionAttributes.ID);
-			if((attrs != null)&&(attrs.isSelected())){	
-				return true;
-			}
-		}
-		return false;
-	}
-	
-	private boolean isSelected(Shape s){
-		SelectionAttributes attrs = (SelectionAttributes) s.getAttributes(SelectionAttributes.ID);
-		if (attrs == null) return false;
-		return attrs.isSelected();
-	}
-	
-	private int select(Shape s){
-		LOGGER.log(Level.INFO, "Selecting {0}", s);
-		SelectionAttributes attrs = (SelectionAttributes) s.getAttributes(SelectionAttributes.ID);
-		// If this shape has no selection attributes
-		if (attrs == null) return -1; 
-		attrs.select();
-		return 0;
-	}
 
 	@Override
 	public void keyPressed(KeyEvent evt) {
 		super.keyPressed(evt);
-		if ((evt.getKeyCode() == KeyEvent.VK_SHIFT)) {
+		switch (evt.getKeyCode()) {
+		case KeyEvent.VK_SHIFT:
 			shiftDown = true;
-			LOGGER.info("Shift pressed");
-		} else if ((evt.getKeyCode() == KeyEvent.VK_DELETE)){
-			LOGGER.info("Delete pressed");
+			break;
+		case KeyEvent.VK_DELETE:
 			deleteSelected();
-		}
-		else if (evt.getKeyCode() == KeyEvent.VK_Z){
-
-			LOGGER.info("Z pressed: Back");
-			ListIterator<Shape> it = del_mem.listIterator();
-			while(it.hasNext()){
-				Shape str = it.next();
-				Editor.model.add(str);
+			break;
+		case KeyEvent.VK_Z:
+			undo();
+			break;
+		case KeyEvent.VK_C:
+			copy();
+			break;
+		case KeyEvent.VK_V:
+			paste();
+			break;
+		case KeyEvent.VK_H:
+			LOGGER.info("HTML/CSS generated");
+			try {
+				generateHtml();
+			} catch (IOException e) {
+				LOGGER.log(Level.SEVERE, e.getMessage());
 			}
-			del_mem.clear();
-			getView().repaint();
-
-		}
-		else if (evt.getKeyCode() == KeyEvent.VK_C){
-			LOGGER.info("C pressed: Copy");
-			for (Iterator<Shape> it = ((SCollection) this.getModel()).getIterator(); it.hasNext();) {
-				Shape current = it.next();
-				if(isSelected(current)){	
-					copy_mem.add(current);
-				}
-			}
-		}
-		else if (evt.getKeyCode() == KeyEvent.VK_V){
-			LOGGER.info("V pressed: Paste");
-			ListIterator<Shape> it = copy_mem.listIterator();
-			while(it.hasNext()){
-				Shape str = it.next();
-				Editor.model.add(str);
-			}
-			copy_mem.clear();
-			getView().repaint();
+			break;
+		default:
+			break;
 		}
 	}
 
 	@Override
 	public void keyReleased(KeyEvent evt) {
 		super.keyReleased(evt);
-		if ((evt.getKeyCode() == KeyEvent.VK_SHIFT)) {
+		switch (evt.getKeyCode()) {
+		case KeyEvent.VK_SHIFT:
 			shiftDown = false;
-			LOGGER.info("Shift released");
-		} else if ((evt.getKeyCode() == KeyEvent.VK_DELETE)){
-			LOGGER.info("Delete released");
-			deleteSelected();
+			break;
 		}
 	}
 
@@ -221,7 +162,6 @@ public class ShapesController extends Controller implements Cloneable {
 	}
 
 	public void translateSelected(int dx, int dy) {
-		//LOGGER.log(Level.FINE, "Translate : x={0}, y={1}", new Object[] { s.getLoc().x, s.getLoc().y });
 		for (Iterator<Shape> it = ((SCollection) this.getModel()).getIterator(); it.hasNext();) {
 			Shape current = it.next();
 			if (isSelected(current)) current.translate(dx, dy);
@@ -233,8 +173,8 @@ public class ShapesController extends Controller implements Cloneable {
 		ArrayList<Shape> toDelete = new ArrayList<Shape>();
 		for (Iterator<Shape> it = ((SCollection) this.getModel()).getIterator(); it.hasNext();) {
 			Shape current = it.next();
-			if(isSelected(current)){	
-				this.del_mem.add(current);
+			if(isSelected(current)){
+				this.delMem.add(current);
 				toDelete.add(current);
 			}
 		}
@@ -248,13 +188,107 @@ public class ShapesController extends Controller implements Cloneable {
 	public void unselectAll() {
 		for (Iterator<Shape> it = ((SCollection) this.getModel()).getIterator(); it.hasNext();) {
 			Shape current = it.next();
-			SelectionAttributes attrs = (SelectionAttributes) current.getAttributes(SelectionAttributes.ID);
-			if (attrs != null) attrs.unselect();
+			unselect(current);
 		}
 		getView().repaint();
 	}
 
+	public void generateHtml() throws IOException {
+		PrintWriter index = new PrintWriter("index.html", "UTF-8");
+		PrintWriter style = new PrintWriter("style.css", "UTF-8");
+
+		index.println("<!DOCTYPE htm>");
+		index.println("<html lang=\"fr\">");
+		index.println("<head>");
+		index.println("<meta http-equiv=\"Content-Type\" content=\"text/html; charset=UTF-8\" />");
+		index.println("<link rel=\"stylesheet\" href=\"style.css\" />");
+		index.println("<title>TP Shape COLICCHIO et GASSER</title>");
+		index.println("</head>");
+		index.println("<body>");
+
+		for (Iterator<Shape> it = ((SCollection) this.getModel()).getIterator(); it.hasNext();) {
+			Shape current = it.next();
+			index.println(current.htmlShape());
+		}
+		index.flush();
+		index.println("<footer>");
+		index.println("<p> 2017 Crée par Alexandre COLICCHIO et Thibaud GASSER - Site généré automatiquement dans le cadre de notre TP Shape </p>");
+		index.println("</footer>");
+		index.println("</body>");
+		index.println("</html>");
+		index.close();
+
+		style.println("footer{text-align:center;margin:auto;height:50px;position:fixed;bottom:0;font-weight:bold;}");
+
+		for (Iterator<Shape> it = ((SCollection) this.getModel()).getIterator(); it.hasNext();) {
+			Shape current = it.next();
+			style.println(current.cssShape());
+		}
+		style.close();
+	}
+
 	public boolean shiftDown() {
 		return this.shiftDown;
+	}
+
+	private boolean isAnyShapeSelected(){
+		for (Iterator<Shape> it = ((SCollection) this.getModel()).getIterator(); it.hasNext();) {
+			Shape current = it.next();
+			if (isSelected(current)) return true;
+		}
+		return false;
+	}
+
+	private boolean isSelected(Shape s) {
+		SelectionAttributes attrs = (SelectionAttributes) s.getAttributes(SelectionAttributes.ID);
+		if (attrs == null) return false;
+		return attrs.isSelected();
+	}
+
+	private int select(Shape s) {
+		LOGGER.log(Level.INFO, "Selecting {0}", s);
+		SelectionAttributes attrs = (SelectionAttributes) s.getAttributes(SelectionAttributes.ID);
+		// If this shape has no selection attributes
+		if (attrs == null) return -1;
+		attrs.select();
+		return 0;
+	}
+
+	private int unselect(Shape s) {
+		SelectionAttributes attrs = (SelectionAttributes) s.getAttributes(SelectionAttributes.ID);
+		// If this shape has no selection attributes
+		if (attrs == null) return -1;
+		attrs.unselect();
+		return 0;
+	}
+
+	public void undo(){
+		ListIterator<Shape> it = delMem.listIterator();
+		while(it.hasNext()){
+			Shape str = it.next();
+			((SCollection) getModel()).add(str);
+		}
+		delMem.clear();
+		getView().repaint();
+	}
+
+	private void copy(){
+		for (Iterator<Shape> it = ((SCollection) this.getModel()).getIterator(); it.hasNext();) {
+			Shape current = it.next();
+			if(isSelected(current)){
+				copyMem.add(current);
+			}
+		}
+	}
+
+	private void paste(){
+		ListIterator<Shape> it = copyMem.listIterator();
+		while(it.hasNext()){
+			Shape str = it.next();
+			((SCollection) getModel()).add(str);
+		}
+
+		delMem.clear();
+		getView().repaint();
 	}
 }

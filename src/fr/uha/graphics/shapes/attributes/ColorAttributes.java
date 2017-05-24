@@ -17,6 +17,14 @@ public class ColorAttributes extends Attributes {
 		this.strokedColor = strokedColor;
 		this.filledColor = filledColor;
 	}
+	
+	public ColorAttributes(ColorAttributes colAttrs){
+		// Copy constructor.
+		this.filled = colAttrs.filled;
+		this.stroked = colAttrs.stroked;
+		this.strokedColor = colAttrs.strokedColor;
+		this.filledColor = colAttrs.filledColor;
+	}
 
 	public ColorAttributes() {
 		// Constructor for color attributes with default values

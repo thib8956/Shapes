@@ -22,4 +22,14 @@ public class SSelection extends SRectangle {
 		Rectangle rect = this.getRect();
 		return "SSelection [x=" + rect.x + " y=" + rect.y + " height=" + rect.height + " width=" + rect.width + "]";
 	}
+	
+	@Override
+	public String cssShape() {
+		return "";
+	}
+	
+	@Override
+	public String htmlShape() {
+		return "";
+	}
 }

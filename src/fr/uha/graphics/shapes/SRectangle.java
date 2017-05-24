@@ -3,6 +3,8 @@ package fr.uha.graphics.shapes;
 import java.awt.Point;
 import java.awt.Rectangle;
 
+import fr.uha.graphics.shapes.attributes.ColorAttributes;
+
 public class SRectangle extends Shape {
 	private Rectangle rect;
 
@@ -43,5 +45,22 @@ public class SRectangle extends Shape {
 	@Override
 	public String toString() {
 		return "SRectangle [x=" + rect.x + " y=" + rect.y + " height=" + rect.height + " width=" + rect.width + "]";
+	}
+
+	@Override
+	public String htmlShape() {
+		return "<div class=\"rectangle"+this.hashCode()+"\"></div>";
+	}
+
+	@Override
+	public String cssShape() {
+		StringBuilder strBuilder = new StringBuilder(".rectangle" + this.hashCode() + "{ ");
+		strBuilder.append("position:absolute;");
+		strBuilder.append("top:" + this.getLoc().y + "px;");
+		strBuilder.append("left:" + this.getLoc().x + "px;");
+		strBuilder.append("width:" + this.rect.width + "px;");
+		strBuilder.append("height:" + this.rect.height + "px;");
+		strBuilder.append(this.attributesCss() + " }");
+		return strBuilder.toString();
 	}
 }
