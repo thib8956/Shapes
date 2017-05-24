@@ -165,13 +165,7 @@ public class ShapesController extends Controller {
 		else if (evt.getKeyCode() == KeyEvent.VK_Z){
 
 			LOGGER.info("Z pressed: Back");
-			ListIterator<Shape> it = del_mem.listIterator();
-			while(it.hasNext()){
-				Shape str = it.next();
-				((SCollection) getModel()).add(str);
-			}
-			del_mem.clear();
-			getView().repaint();
+			undo();
 
 		}
 		else if (evt.getKeyCode() == KeyEvent.VK_C){
@@ -256,5 +250,16 @@ public class ShapesController extends Controller {
 
 	public boolean shiftDown() {
 		return this.shiftDown;
+	}
+	
+	// FIXME: merge controller from branch refactoring
+	public void undo() {
+		ListIterator<Shape> it = del_mem.listIterator();
+		while(it.hasNext()){
+			Shape str = it.next();
+			((SCollection) getModel()).add(str);
+		}
+		del_mem.clear();
+		getView().repaint();
 	}
 }

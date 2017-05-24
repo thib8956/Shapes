@@ -12,45 +12,49 @@ import fr.uha.graphics.shapes.SCollection;
 import fr.uha.graphics.shapes.Shape;
 import fr.uha.graphics.shapes.attributes.ColorAttributes;
 import fr.uha.graphics.shapes.attributes.SelectionAttributes;
+import fr.uha.graphics.shapes.ui.ShapesController;
 import fr.uha.graphics.shapes.ui.ShapesView;
+import fr.uha.graphics.ui.Controller;
 
 public class MenuEditListener implements ActionListener {
 	private static final Logger LOGGER = Logger.getLogger(SCollection.class.getName());
 	
 	private SCollection model;
 	private ShapesView view;
+	private ShapesController controller;
 	
-	public MenuEditListener(SCollection model, ShapesView view) {
+	public MenuEditListener(SCollection model, ShapesView view, Controller controller) {
 		this.model = model;
 		this.view = view;
+		this.controller = (ShapesController) controller;
 	}
 	
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		Object source = e.getSource();
-		if (e.getActionCommand().equals("Change color")) changeColor();
-		if (source instanceof JCheckBoxMenuItem){
+		if (e.getActionCommand().equals("Change color")) changeColor(randomColor(), randomColor());
+		else if (e.getActionCommand().equals("Delete")) this.controller.deleteSelected();
+		else if (e.getActionCommand().equals("Undo")) this.controller.undo();
+		else if (source instanceof JCheckBoxMenuItem) {
 			JCheckBoxMenuItem item = (JCheckBoxMenuItem) source;
 			if (item.getText().equals("Draw border")) setBorder(item.isSelected());
 			if (item.getText().equals("Fill Shape")) setShapeFilled(item.getState());
 		}
+		view.repaint();
 	}
 	
 	private Color randomColor(){
 		return new Color((int)(Math.random() * 0x1000000));
 	}
 	
-	/*
-	 * Replace the color of all selected shapes with a random color.
-	 */
-	private void changeColor(){
+	private void changeColor(Color filledColor, Color strockedColor){
 		for (Iterator<Shape> it = model.getIterator(); it.hasNext();) {
 			Shape current = (Shape)it.next();
-			SelectionAttributes selAttrs = (SelectionAttributes)current.getAttributes(SelectionAttributes.ID);
+			SelectionAttributes selAttrs = (SelectionAttributes) current.getAttributes(SelectionAttributes.ID);
 			if ((selAttrs == null) || (! selAttrs.isSelected())) continue;
-			current.addAttributes(new ColorAttributes(true, true, randomColor(), randomColor()));
+			ColorAttributes currentColAttrs = (ColorAttributes) current.getAttributes(ColorAttributes.ID);
+			current.addAttributes(new ColorAttributes(currentColAttrs.filled, currentColAttrs.stroked, filledColor, strockedColor));
 		}
-		view.repaint();
 	}
 	
 	/*
@@ -65,23 +69,21 @@ public class MenuEditListener implements ActionListener {
 			colAttrs.stroked = state;
 			current.addAttributes(new ColorAttributes(colAttrs));
 		}
-		view.repaint();
 	}
 	
 	/*
-	 * 
+	 * Change the filled state for all selected shapes.
 	 */
 	private void setShapeFilled(boolean state){
 		LOGGER.info("setShapeFilled(" + state + ")");
 		for (Iterator<Shape> it=model.getIterator(); it.hasNext();){
-			Shape current = (Shape)it.next();
+			Shape current = it.next();
 			SelectionAttributes selAttrs = (SelectionAttributes)current.getAttributes(SelectionAttributes.ID);
 			if ((selAttrs == null) || (!selAttrs.isSelected())) continue;
 			ColorAttributes colAttrs = (ColorAttributes) current.getAttributes(ColorAttributes.ID);
 			colAttrs.filled = state;
 			current.addAttributes(new ColorAttributes(colAttrs));
 		}
-		view.repaint();
 	}
 
 }
