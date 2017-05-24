@@ -1,8 +1,13 @@
 package fr.uha.graphics.shapes.ui;
 
 import java.awt.Point;
+import java.io.PrintWriter;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -44,10 +49,10 @@ public class ShapesController extends Controller {
 		super.mousePressed(e);
 		this.locClicked = e.getPoint();
 		Shape target = getTarget();
-		
+
 		if (!shiftDown()){
 			unselectAll();
-		} 
+		}
 
 		if (target != null){
 			SelectionAttributes selAttrs = (SelectionAttributes) target.getAttributes(SelectionAttributes.ID);
@@ -85,7 +90,7 @@ public class ShapesController extends Controller {
 	public void mouseDragged(MouseEvent evt) {
 		super.mouseDragged(evt);
 		boolean anyShapeSelected = isAnyShapeSelected();
-		
+
 		for (Iterator<Shape> it = ((SCollection) this.getModel()).getIterator(); it.hasNext();) {
 			Shape current = it.next();
 
@@ -96,14 +101,14 @@ public class ShapesController extends Controller {
 				getView().repaint();
 			}
 			// Translate all selected shapes.
-			if(isSelected(current)){	
+			if(isSelected(current)){
 				int dx = evt.getPoint().x - current.getLoc().x;
 				int dy = evt.getPoint().y - current.getLoc().y;
 				translateSelected(dx, dy);
 			}
 		}
 	}
-	
+
 	@Override
 	public void keyPressed(KeyEvent evt) {
 		super.keyPressed(evt);
@@ -123,20 +128,12 @@ public class ShapesController extends Controller {
 		case KeyEvent.VK_V:
 			paste();
 			break;
+		case KeyEvent.VK_H:
+			LOGGER.info("HTML/CSS generated");
+			htmlGenerator();
+			break;
 		default:
 			break;
-		}
-	}
-	
-	@Override
-	public void keyReleased(KeyEvent evt) {
-		super.keyReleased(evt);
-		switch (evt.getKeyCode()) {
-		case KeyEvent.VK_DELETE:
-			deleteSelected();
-			break;
-		case KeyEvent.VK_SHIFT:
-			shiftDown = false;
 		}
 	}
 
@@ -165,7 +162,7 @@ public class ShapesController extends Controller {
 		ArrayList<Shape> toDelete = new ArrayList<Shape>();
 		for (Iterator<Shape> it = ((SCollection) this.getModel()).getIterator(); it.hasNext();) {
 			Shape current = it.next();
-			if(isSelected(current)){	
+			if(isSelected(current)){
 				this.delMem.add(current);
 				toDelete.add(current);
 			}
@@ -183,6 +180,48 @@ public class ShapesController extends Controller {
 			unselect(current);
 		}
 		getView().repaint();
+	}
+
+	public void htmlGenerator(){
+		try {
+			//BufferedWriter index = new BufferedWriter(new FileWriter(new File("index.html")));
+			//BufferedWriter style = new BufferedWriter(new FileWriter(new File("style.css")));
+			PrintWriter index = new PrintWriter("index.html", "UTF-8");
+			PrintWriter style = new PrintWriter("style.css", "UTF-8");
+
+			index.println("<!DOCTYPE htm>");
+			index.println("<html lang=\"fr\">");
+			index.println("<head>");
+			index.println("<meta http-equiv=\"Content-Type\" content=\"text/html; charset=UTF-8\" />");
+			index.println("<link rel=\"stylesheet\" href=\"style.css\" />");
+			index.println("<title>TP Shape COLICCHIO et GASSER</title>");
+			index.println("</head>");
+			index.println("<body>");
+
+			for (Iterator<Shape> it = ((SCollection) this.getModel()).getIterator(); it.hasNext();) {
+				Shape current = it.next();
+				index.println(current.htmlShape());
+			}
+			index.flush();
+			index.println("<footer>");
+			index.println("<p> 2017 Crée par Alexandre COLICCHIO et Thibaud GASSER - Site généré automatiquement dans le cadre de notre TP Shape </p>");
+			index.println("</footer>");
+			index.println("</body>");
+			index.println("</html>");
+			index.close();
+			style.println("footer{text-align:center;margin:auto;height:50px;position:fixed;bottom:0;font-weight:bold;}");
+
+			for (Iterator<Shape> it = ((SCollection) this.getModel()).getIterator(); it.hasNext();) {
+				Shape current = it.next();
+				style.println(current.cssShape());
+			}
+			style.close();
+
+
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 
 	public boolean shiftDown() {
@@ -207,7 +246,7 @@ public class ShapesController extends Controller {
 		LOGGER.log(Level.INFO, "Selecting {0}", s);
 		SelectionAttributes attrs = (SelectionAttributes) s.getAttributes(SelectionAttributes.ID);
 		// If this shape has no selection attributes
-		if (attrs == null) return -1; 
+		if (attrs == null) return -1;
 		attrs.select();
 		return 0;
 	}
@@ -215,11 +254,11 @@ public class ShapesController extends Controller {
 	private int unselect(Shape s) {
 		SelectionAttributes attrs = (SelectionAttributes) s.getAttributes(SelectionAttributes.ID);
 		// If this shape has no selection attributes
-		if (attrs == null) return -1; 
+		if (attrs == null) return -1;
 		attrs.unselect();
 		return 0;
 	}
-	
+
 	private void undo(){
 		ListIterator<Shape> it = delMem.listIterator();
 		while(it.hasNext()){
@@ -229,16 +268,16 @@ public class ShapesController extends Controller {
 		delMem.clear();
 		getView().repaint();
 	}
-	
+
 	private void copy(){
 		for (Iterator<Shape> it = ((SCollection) this.getModel()).getIterator(); it.hasNext();) {
 			Shape current = it.next();
-			if(isSelected(current)){	
+			if(isSelected(current)){
 				copyMem.add(current);
 			}
 		}
 	}
-	
+
 	private void paste(){
 		ListIterator<Shape> it = copyMem.listIterator();
 		while(it.hasNext()){

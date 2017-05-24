@@ -58,12 +58,12 @@ public class Editor extends JFrame {
 	private void buildModel() {
 		this.model = new SCollection();
 		this.model.addAttributes(new SelectionAttributes());
-		
+
 		SSelection sel=new SSelection(new Point (0,0),0,0);
 		sel.addAttributes(new ColorAttributes(false, true, Color.BLACK, Color.BLACK));
 //		sel.addAttributes(new SelectionAttributes());
 		this.model.add(sel);
-		
+
 		SRectangle r = new SRectangle(new Point(10, 10), 40, 60);
 		r.addAttributes(new ColorAttributes(true, true, Color.BLUE, Color.BLACK));
 		r.addAttributes(new SelectionAttributes());
@@ -74,33 +74,34 @@ public class Editor extends JFrame {
 		c.addAttributes(new SelectionAttributes());
 		this.model.add(c);
 //
-//		SText t = new SText(new Point(150, 150), "hello");
-//		t.addAttributes(new ColorAttributes(true, true, Color.YELLOW, Color.BLUE));
-//		t.addAttributes(new FontAttributes());
-//		t.addAttributes(new SelectionAttributes());
-//		this.model.add(t);
+		SText t = new SText(new Point(150, 150), "hello");
+		t.addAttributes(new ColorAttributes(true, true, Color.YELLOW, Color.BLUE));
+		t.addAttributes(new FontAttributes());
+		t.addAttributes(new SelectionAttributes());
+		this.model.add(t);
 //
-//		SCollection sc = new SCollection();
-//		sc.addAttributes(new SelectionAttributes());
-//		r = new SRectangle(new Point(20, 30), 60, 60);
-//		r.addAttributes(new ColorAttributes(true, false, Color.MAGENTA, Color.BLUE));
-//		r.addAttributes(new SelectionAttributes());
-//		sc.add(r);
-//		
-//		c = new SCircle(new Point(150, 100), 40);
-//		c.addAttributes(new ColorAttributes(false, true, Color.BLUE, Color.DARK_GRAY));
-//		c.addAttributes(new SelectionAttributes());
-//		sc.add(c);
-//		this.model.add(sc);
+		SCollection sc = new SCollection();
+		sc.addAttributes(new SelectionAttributes());
+		r = new SRectangle(new Point(20, 30), 60, 60);
+		r.addAttributes(new ColorAttributes(true, false, Color.MAGENTA, Color.BLUE));
+		r.addAttributes(new SelectionAttributes());
+		sc.add(r);
 //
-//		STriangle tri = new STriangle(new Point(200, 200), 50);
-//		tri.addAttributes(new ColorAttributes(true, true, Color.YELLOW, Color.BLACK));
-//		tri.addAttributes(new SelectionAttributes());
-//		this.model.add(tri);
+		c = new SCircle(new Point(150, 100), 40);
+		c.addAttributes(new ColorAttributes(false, true, Color.BLUE, Color.DARK_GRAY));
+		c.addAttributes(new SelectionAttributes());
+		sc.add(c);
+		this.model.add(sc);
+//
+		STriangle tri = new STriangle(new Point(200, 200), 50);
+		tri.addAttributes(new ColorAttributes(true, true, Color.YELLOW, Color.BLACK));
+		tri.addAttributes(new SelectionAttributes());
+		this.model.add(tri);
 	}
 
 	public static void main(String[] args) {
 		Editor.initLogger();
+		//ShapesController.htmlGenerator();
 
 		Editor self = new Editor();
 		self.pack();
