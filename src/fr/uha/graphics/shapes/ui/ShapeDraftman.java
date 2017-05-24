@@ -104,7 +104,6 @@ public class ShapeDraftman implements ShapeVisitor {
 		drawHandlerIfSelected(col);
 	}
 
-	// TODO : refactor visitTriangle
 	public void visitTriangle(STriangle tri){
 		Point loc = tri.getLoc();
 		int size = tri.getSize();
@@ -127,6 +126,18 @@ public class ShapeDraftman implements ShapeVisitor {
 		drawHandlerIfSelected(tri);
 	}
 	
+	@Override
+	public void visitSelection(SSelection sel) {
+		Rectangle r = sel.getRect();
+		ColorAttributes attrs = (ColorAttributes) sel.getAttributes(ColorAttributes.ID);
+	
+		if (attrs == null) attrs = DEFAULT_COLOR_ATTRIBUTES;
+		this.graph.drawRect(r.x, r.y, r.width, r.height);
+	}
+	
+	/*
+	 * Draw handlers on all selected shapes.
+	 */
 	private void drawHandlerIfSelected(Shape s){
 		SelectionAttributes selAttrs = (SelectionAttributes) s.getAttributes(SelectionAttributes.ID);
 		if ((selAttrs != null)&&(selAttrs.isSelected())){
@@ -143,14 +154,5 @@ public class ShapeDraftman implements ShapeVisitor {
 
 	public void setGraphics(Graphics g) {
 		this.graph = (Graphics2D) g;
-	}
-
-	@Override
-	public void visitSelection(SSelection sel) {
-		Rectangle r = sel.getRect();
-		ColorAttributes attrs = (ColorAttributes) sel.getAttributes(ColorAttributes.ID);
-
-		if (attrs == null) attrs = DEFAULT_COLOR_ATTRIBUTES;
-		this.graph.drawRect(r.x, r.y, r.width, r.height);
 	}
 }
