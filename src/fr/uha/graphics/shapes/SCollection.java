@@ -65,7 +65,6 @@ public class SCollection extends Shape {
 				bounds = bounds.union(s.getBounds());
 		} catch (IndexOutOfBoundsException e){
 			// If the SCollection is empty, set the bounds to fill the window
-			// TODO create a class with global constants ?
 			return new Rectangle(Editor.WIN_SIZE);
 		}
 		return bounds;

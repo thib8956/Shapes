@@ -1,6 +1,8 @@
 footer{text-align:center;margin:auto;height:50px;position:fixed;bottom:0;font-weight:bold;}
 
-.rectangle1025249579{ position:absolute;top:273px;left:307px;width:40px;height:60px;background: #0000ff;border:1px solid #000000; }
-.rectangle1431801483{ position:absolute;top:294px;left:132px;width:60px;height:60px;background: #ff00ff; }.circle136271939{ position: absolute;top:364px;left:262px;width:40px;height:40px;border-radius:20px;-webkit-border-radius:20px;-o-border-radius:20px;-moz-border-radius:20px;background:#ffffff;border:1px solid #404040; }
-.text1732665824{ position: absolute;top: 222px;left: 286px;width: 69px;height: 30px;font-family: "Arial";font-size: 30px;color: #0000ff;font-weight: bold;background: #ffff00; }
-.triangle1114299841{ position: absolute;top: 200px;left: 200px;width: 0px;height: 0px;border: 0 solid transparent;border-left-width: 30.0px;border-right-width: 30.0px;border-bottom: 50px solid #777c55;}
+.rectangle813589267{ position:absolute;top:89px;left:95px;width:60px;height:60px;background: #999999;border:1px solid #000000; }.circle1577038754{ position: absolute;top:159px;left:225px;width:40px;height:40px;border-radius:20px;-webkit-border-radius:20px;-o-border-radius:20px;-moz-border-radius:20px;background: #999999;border:1px solid #000000; }
+.triangle527292885{ position: absolute;top: 38px;left: 243px;width: 0px;height: 0px;border: 0 solid transparent;border-left-width: 30.0px;border-right-width: 30.0px;border-bottom: 50px solid #ecb4ee;}
+.rectangle1045587243{ position:absolute;top:105px;left:319px;width:40px;height:60px;background: #0000ff;border:1px solid #000000; }
+.circle2117079733{ position: absolute;top:42px;left:109px;width:30px;height:30px;border-radius:15px;-webkit-border-radius:15px;-o-border-radius:15px;-moz-border-radius:15px;background: #999999;border:1px solid #ff0000; }
+.text997905906{ position: absolute;top: 139px;left: 179px;width: 69px;height: 30px;font-family: "Arial";font-size: 30px;color: #0000ff;font-weight: bold;background: #ecb4ee;border:1px solid #0000ff; }
+.rectangle1033207963{ position:absolute;top:185px;left:299px;width:50px;height:50px;background: #ecb4ee;border:1px solid #ffffff; }
