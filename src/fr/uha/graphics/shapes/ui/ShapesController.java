@@ -1,6 +1,7 @@
 package fr.uha.graphics.shapes.ui;
 
 import java.awt.Point;
+import java.awt.Rectangle;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 import java.io.IOException;
@@ -12,9 +13,15 @@ import java.util.ListIterator;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import fr.uha.graphics.shapes.SCircle;
 import fr.uha.graphics.shapes.SCollection;
+import fr.uha.graphics.shapes.SRectangle;
 import fr.uha.graphics.shapes.SSelection;
+import fr.uha.graphics.shapes.SText;
+import fr.uha.graphics.shapes.STriangle;
 import fr.uha.graphics.shapes.Shape;
+import fr.uha.graphics.shapes.attributes.ColorAttributes;
+import fr.uha.graphics.shapes.attributes.FontAttributes;
 import fr.uha.graphics.shapes.attributes.SelectionAttributes;
 import fr.uha.graphics.ui.Controller;
 
@@ -282,13 +289,33 @@ public class ShapesController extends Controller {
 	}
 
 	private void paste(){
-		ListIterator<Shape> it = copyMem.listIterator();
-		while(it.hasNext()){
-			Shape str = it.next();
-			((SCollection) getModel()).add(str);
+		SCollection model = (SCollection) this.getModel();
+		for (Iterator<Shape> it = copyMem.iterator(); it.hasNext();) {
+			Shape current = (Shape) it.next();
+			Shape s = cloneShape(current);
+			model.add(s);
 		}
-
-		delMem.clear();
+		copyMem.clear();
 		getView().repaint();
+	}
+	
+	private Shape cloneShape(Shape s){
+		Rectangle bounds = s.getBounds();
+		Shape newShape = null;
+		
+		if (s instanceof STriangle) {
+			newShape = new STriangle(new Point(), bounds.width);
+		} else if (s instanceof SRectangle) {
+			newShape = new SRectangle(new Point(), bounds.width, bounds.height);
+		} else if (s instanceof SCircle) {
+			newShape = new SCircle(new Point(), bounds.width);
+		} else if (s instanceof SText) {
+			System.out.println("Texte : " + ((SText) s).getText());
+			newShape = new SText(new Point(0, bounds.height), ((SText) s).getText());
+			newShape.addAttributes((FontAttributes) s.getAttributes(FontAttributes.ID));
+		}
+		newShape.addAttributes(new SelectionAttributes());
+		newShape.addAttributes(s.getAttributes(ColorAttributes.ID));
+		return newShape;
 	}
 }

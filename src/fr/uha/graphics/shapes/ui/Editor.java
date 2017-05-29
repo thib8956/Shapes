@@ -161,17 +161,20 @@ public class Editor extends JFrame {
 		MenuEditListener editListener = new MenuEditListener(model, sview, sview.getController());
 		JMenu menuEdit = new JMenu("Edit");
 		JMenuItem editColor = new JMenuItem("Change color");
+		JMenuItem editBorderColor = new JMenuItem("Change border color");
 		JMenuItem deleteItem = new JMenuItem("Delete");
 		JMenuItem undoItem = new JMenuItem("Undo");
 		JCheckBoxMenuItem editFill = new JCheckBoxMenuItem("Fill Shape");
 		JCheckBoxMenuItem editBorder = new JCheckBoxMenuItem("Draw border");
 		editColor.addActionListener(editListener);
+		editBorderColor.addActionListener(editListener);
 		deleteItem.addActionListener(editListener);
 		undoItem.addActionListener(editListener);
 		editFill.addActionListener(editListener);
 		editBorder.addActionListener(editListener);
 
 		menuEdit.add(editColor);
+		menuEdit.add(editBorderColor);
 		menuEdit.add(deleteItem);
 		menuEdit.add(undoItem);
 		menuEdit.addSeparator();
@@ -184,8 +187,7 @@ public class Editor extends JFrame {
 		aboutItem.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
-				//TODO: about message
-				JOptionPane.showMessageDialog(null, "Lorem ipsum dolor sit amet", "About this project",
+				JOptionPane.showMessageDialog(null, "This project was created by Alexandre Colicchio and Thibaud Gasser", "About this project",
 						JOptionPane.INFORMATION_MESSAGE);
 			}
 		});

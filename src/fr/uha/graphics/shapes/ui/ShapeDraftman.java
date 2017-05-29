@@ -25,7 +25,6 @@ public class ShapeDraftman implements ShapeVisitor {
 	private static final Logger LOGGER = Logger.getLogger(ShapeDraftman.class.getName());
 
 	// Default attributes
-	// TODO : externalize constants ?
 	private static final ColorAttributes DEFAULT_COLOR_ATTRIBUTES = new ColorAttributes(false, true, Color.BLACK, Color.BLACK);
 
 	private Graphics2D graph;

@@ -57,7 +57,6 @@ public class STriangle extends Shape {
 
 	@Override
 	public String cssShape() {
-		//TODO: add a border to the HTML triangle
 		ColorAttributes colAttrs = (ColorAttributes) this.getAttributes(ColorAttributes.ID);
 		String colorString = String.format("#%02x%02x%02x", 
 											colAttrs.filledColor.getRed(), 

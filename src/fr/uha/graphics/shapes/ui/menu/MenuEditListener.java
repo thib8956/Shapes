@@ -34,11 +34,12 @@ public class MenuEditListener implements ActionListener {
 	public void actionPerformed(ActionEvent e) {
 		Object source = e.getSource();
 		if (e.getActionCommand().equals("Change color")){
-//			changeColor(randomColor(), randomColor());
 			Color newColor = JColorChooser.showDialog(null, "Choose a color", Color.RED);
 			changeColor(newColor);
-		}
-		else if (e.getActionCommand().equals("Delete")) this.controller.deleteSelected();
+		} else if (e.getActionCommand().equals("Change border color")){
+			Color newColor = JColorChooser.showDialog(null, "Choose a color", Color.RED);
+			changeBorderColor(newColor);
+		} else if (e.getActionCommand().equals("Delete")) this.controller.deleteSelected();
 		else if (e.getActionCommand().equals("Undo")) this.controller.undo();
 		else if (source instanceof JCheckBoxMenuItem) {
 			JCheckBoxMenuItem item = (JCheckBoxMenuItem) source;
@@ -57,8 +58,28 @@ public class MenuEditListener implements ActionListener {
 			Shape current = (Shape)it.next();
 			SelectionAttributes selAttrs = (SelectionAttributes) current.getAttributes(SelectionAttributes.ID);
 			if ((selAttrs == null) || (! selAttrs.isSelected())) continue;
+			
 			ColorAttributes currentColAttrs = (ColorAttributes) current.getAttributes(ColorAttributes.ID);
-			current.addAttributes(new ColorAttributes(currentColAttrs.filled, currentColAttrs.stroked, filledColor, currentColAttrs.strokedColor));
+			if (currentColAttrs != null) {
+				current.addAttributes(new ColorAttributes(currentColAttrs.filled, currentColAttrs.stroked, filledColor, currentColAttrs.strokedColor));
+			} else {
+				current.addAttributes(new ColorAttributes(true, true, filledColor, Color.BLACK));
+			}
+		}
+	}
+	
+	private void changeBorderColor(Color strockedColor){
+		for (Iterator<Shape> it = model.getIterator(); it.hasNext();) {
+			Shape current = (Shape)it.next();
+			SelectionAttributes selAttrs = (SelectionAttributes) current.getAttributes(SelectionAttributes.ID);
+			if ((selAttrs == null) || (! selAttrs.isSelected())) continue;
+			
+			ColorAttributes currentColAttrs = (ColorAttributes) current.getAttributes(ColorAttributes.ID);
+			if (currentColAttrs != null) {
+				current.addAttributes(new ColorAttributes(currentColAttrs.filled, currentColAttrs.stroked, currentColAttrs.filledColor, strockedColor));
+			} else {
+				current.addAttributes(new ColorAttributes(true, true, Color.WHITE, strockedColor));
+			}
 		}
 	}
 	

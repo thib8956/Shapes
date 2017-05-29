@@ -27,7 +27,6 @@ public class ShapesView extends View {
 		Shape model = (Shape) this.getModel();
 		this.draftman = new ShapeDraftman(component);
 		model.accept(draftman);
-
 	}
 
 	@Override
